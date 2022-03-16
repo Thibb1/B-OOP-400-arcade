@@ -1,6 +1,6 @@
 /*
 ** EPITECH PROJECT, 2022
-** SFML.cpp
+** sfml.cpp
 ** File description:
 ** TODO
 */

@@ -1,8 +1,0 @@
-cmake_minimum_required(VERSION 3.17)
-set(CMAKE_CXX_STANDARD 20)
-set(BUILD_SHARED_LIBS ON)
-add_library(SFML SHARED src/SFML.cpp)
-add_compile_options(-Wall -Wextra)
-set_target_properties(SFML PROPERTIES PREFIX "arcade_")
-set_property(DIRECTORY APPEND PROPERTY ADDITIONAL_MAKE_CLEAN_FILES ${PROJECT_SOURCE_DIR}/lib/arcade_SFML.so)
-add_custom_command(TARGET SFML POST_BUILD COMMAND cp arcade_SFML.so ${PROJECT_SOURCE_DIR}/lib)
