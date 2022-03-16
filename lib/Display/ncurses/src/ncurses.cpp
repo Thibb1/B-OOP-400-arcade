@@ -1,6 +1,6 @@
 /*
 ** EPITECH PROJECT, 2022
-** SDL.cpp
+** ncurses.cpp
 ** File description:
 ** TODO
 */
