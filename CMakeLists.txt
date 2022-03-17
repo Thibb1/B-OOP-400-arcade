@@ -2,8 +2,10 @@ cmake_minimum_required(VERSION 3.17)
 project(arcade)
 set(CMAKE_CXX_STANDARD 20)
 add_compile_options(-Wall -Wextra)
-add_executable(arcade src/main.cpp)
-#set
+add_executable(arcade
+        src/Main.cpp
+        src/ArcadeBorne.cpp src/ArcadeParse.cpp)
+target_include_directories(arcade PUBLIC includes)
 add_subdirectory(lib/Display/ncurses)
 add_subdirectory(lib/Display/sdl2)
 add_subdirectory(lib/Display/sfml)
