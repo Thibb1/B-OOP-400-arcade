@@ -30,7 +30,7 @@ namespace Arcade
 
     protected:
         int CurrentGame;
-        int CurrentLibrary;
+        int CurrentGraphic;
         std::vector<Game> Games;
         std::vector<Graphic> Graphics;
     };

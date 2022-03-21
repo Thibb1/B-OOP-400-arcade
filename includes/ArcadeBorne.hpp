@@ -15,7 +15,7 @@ namespace Arcade
 {
     typedef std::string Player;
 
-class ArcadeBorne : public ArcadeParse {
+    class ArcadeBorne : public ArcadeParse {
     public:
         ArcadeBorne(int NbArguments, char **Arguments);
         ~ArcadeBorne() = default;

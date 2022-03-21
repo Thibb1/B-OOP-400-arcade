@@ -12,7 +12,7 @@ Arcade::ArcadeParse::ArcadeParse(int NbArguments, char **Arguments) : CurrentGam
     CheckArgument(NbArguments, Arguments);
     GetLibraries();
     CheckLibraries();
-    CurrentLibrary = (int)std::distance(Graphics.begin(), std::find(Graphics.begin(), Graphics.end(), Arguments[1]));
+    CurrentGraphic = (int)std::distance(Graphics.begin(), std::find(Graphics.begin(), Graphics.end(), Arguments[1]));
 }
 
 

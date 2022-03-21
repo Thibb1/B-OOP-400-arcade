@@ -10,6 +10,7 @@
 #include "ArcadeError.hpp"
 #include "ArcadeBorne.hpp"
 #include "ArcadeParse.hpp"
+#include "Library.hpp"
 
 #define EXIT_SUCCESS 0
 #define EXIT_ERROR 84

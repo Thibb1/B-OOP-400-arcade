@@ -4,8 +4,9 @@ set(CMAKE_CXX_STANDARD 20)
 add_compile_options(-Wall -Wextra)
 add_executable(arcade
         src/Main.cpp
-        src/ArcadeBorne.cpp src/ArcadeParse.cpp)
+        src/ArcadeBorne.cpp src/ArcadeParse.cpp src/Library.cpp)
 target_include_directories(arcade PUBLIC includes)
+target_link_libraries(arcade PUBLIC dl)
 add_subdirectory(lib/Display/ncurses)
 add_subdirectory(lib/Display/sdl2)
 add_subdirectory(lib/Display/sfml)

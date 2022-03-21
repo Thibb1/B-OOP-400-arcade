@@ -8,12 +8,11 @@
 #include "Arcade.hpp"
 #include "ArcadeBorne.hpp"
 
-
-Arcade::ArcadeBorne::ArcadeBorne(int NbArguments, char **Arguments)
-    : ArcadeParse(NbArguments, Arguments)
+Arcade::ArcadeBorne::ArcadeBorne(int NbArguments, char **Arguments) : ArcadeParse(NbArguments, Arguments)
 {
     DisplayLibs();
     GetPlayerName();
+    auto test = Library(Graphics[CurrentGraphic]);
 }
 
 void Arcade::ArcadeBorne::DisplayLibs()
