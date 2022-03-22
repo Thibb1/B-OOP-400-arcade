@@ -13,7 +13,7 @@ Arcade::ArcadeBorne::ArcadeBorne(int NbArguments, char **Arguments) : ArcadePars
 {
     DisplayLibs();
     GetPlayerName();
-    game = Library<Arcade::IGame>("./lib/arcade_Menu.so");
+    game = LibraryGame("./lib/arcade_Menu.so");
     LoadGraphicLib();
     while (true) {
         Input input = display.GetLibrary()->GetInput();

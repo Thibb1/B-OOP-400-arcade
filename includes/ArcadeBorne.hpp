@@ -31,7 +31,7 @@ namespace Arcade
         void LoadGameLib();
     private:
         Player player;
-        Library<IGame> game;
-        Library<IDisplay> display;
+        LibraryGame game;
+        LibraryDisplay display;
     };
 }
