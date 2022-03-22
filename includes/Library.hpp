@@ -1,5 +1,5 @@
 /*
-** EPITECH PROJECT, {$CURRENT_YEAR}
+** EPITECH PROJECT, 2022
 ** Library.hpp
 ** File description:
 ** TODO
@@ -15,14 +15,30 @@
 
 namespace Arcade
 {
-    typedef std::unique_ptr<void, void (*) (void *)> Handle;
     typedef std::string LibName;
-    //template<typename Lib>
+    template<typename Lib>
     class Library {
     private:
-        Handle handle;
+        void *handle = nullptr;
+        Lib *library = nullptr;
     public:
-        Library(const LibName& libName);
-        virtual ~Library() = default;
+        Library() noexcept = default;
+        ~Library() noexcept {
+            if (handle)
+                dlclose(handle);
+            library = nullptr;
+            handle = nullptr;
+        }
+        explicit Library(const LibName& libName) : handle(dlopen(libName.c_str(), RTLD_NOW | RTLD_LOCAL)){
+            if (!handle)
+                throw ArcadeRuntimeError(dlerror());
+            auto EntryPoint = dlsym(handle, "entry_point");
+            if (!EntryPoint)
+                throw ArcadeRuntimeError(dlerror());
+            library = reinterpret_cast<Lib *(*)()>(EntryPoint)();
+        }
+        Lib *GetLibrary() {
+            return library;
+        }
     };
 }
