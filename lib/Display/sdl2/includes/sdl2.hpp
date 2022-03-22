@@ -23,10 +23,9 @@ namespace Arcade
         SDL_Texture *texture;
         SDL_Point center {};
         SDL_Rect rectangle {};
-        Position position;
         sdl2Texture(const TexturePath&, SDL_Renderer *renderer);
         ~sdl2Texture();
-        void SetPosition(Position NewPosition);
+        void SetPosition(Position position);
     };
     typedef std::string TextureName;
     typedef std::shared_ptr<sdl2Texture> Texture;

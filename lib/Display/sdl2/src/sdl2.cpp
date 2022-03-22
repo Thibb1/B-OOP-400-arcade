@@ -134,8 +134,9 @@ Arcade::sdl2Texture::~sdl2Texture()
     SDL_DestroyTexture(texture);
 }
 
-void Arcade::sdl2Texture::SetPosition(Arcade::Position NewPosition)
+void Arcade::sdl2Texture::SetPosition(Position position)
 {
-    position = NewPosition;
+    rectangle.x = int (position.first * 50);
+    rectangle.y = int (position.second * 50);
 }
 
