@@ -1,3 +1,5 @@
+#include <utility>
+
 /*
 ** EPITECH PROJECT, 2022
 ** Object.hpp
@@ -12,12 +14,14 @@ namespace Arcade
     enum Input {NOTHING, ARROW_LEFT, ARROW_RIGHT, ARROW_UP, ARROW_DOWN, N, P, F, B, M, R, ENTER, EXIT};
     enum Color {BLUE, RED, WHITE, GREEN, PURPLE};
 
-    typedef std::pair<float, float> Position;
-    typedef std::string TexturePath;
     class IObject {
     public:
         virtual ~IObject() = default;
     };
+    typedef std::shared_ptr<IObject> Object;
+
+    typedef std::pair<float, float> Position;
+    typedef std::string TexturePath;
     class Tile : public IObject {
     private:
         TexturePath texturePath;
@@ -35,7 +39,21 @@ namespace Arcade
         ~Tile() override = default;
         TexturePath getTexturePath() {return texturePath;}
         Position getPosition() {return position;}
-        int getRotation() {return rotation;}
+        [[nodiscard]] int getRotation() const {return rotation;}
     };
-    typedef std::shared_ptr<IObject> Object;
+
+    class Text : public IObject {
+    private:
+        std::string text;
+        Position position;
+        Color color;
+    public:
+        explicit Text(std::string text, Color color = WHITE, float positionX = 0, float positionY = 0) :
+                text(std::move(text)),
+                position(std::make_pair(positionX, positionY)),
+                color(color) {};
+        ~Text() override = default;
+        std::string getText() {return text;}
+        Position getPosition() {return position;}
+    };
 }

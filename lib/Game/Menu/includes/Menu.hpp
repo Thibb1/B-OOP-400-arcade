@@ -16,6 +16,7 @@ namespace Arcade
     private:
         int Score;
         std::vector<Object> walls;
+        std::vector<Object> texts;
     public:
         menu();
         ~menu() override = default;

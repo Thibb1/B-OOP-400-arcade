@@ -24,6 +24,7 @@ namespace Arcade
         SDL_Point center {};
         SDL_Rect rectangle {};
         sdl2Texture(const TexturePath&, SDL_Renderer *renderer);
+        sdl2Texture(const std::string& Text, TTF_Font *font, SDL_Renderer *renderer);
         ~sdl2Texture();
         void SetPosition(Position position);
     };
@@ -43,6 +44,8 @@ namespace Arcade
         void RefreshScreen() override;
         void DrawObject(Object object) override;
         void DrawTile(Tile *Tile);
+
+        void DrawText(Text *pText);
     };
     extern "C" sdl2 *entry_point();
 }
