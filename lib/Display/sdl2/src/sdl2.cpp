@@ -158,6 +158,6 @@ Arcade::sdl2Texture::~sdl2Texture()
 
 void Arcade::sdl2Texture::SetPosition(Position position)
 {
-    rectangle.x = int (position.first * 50);
-    rectangle.y = int (position.second * 50);
+    rectangle.x = int (position.first * 30);
+    rectangle.y = int (position.second * 30);
 }

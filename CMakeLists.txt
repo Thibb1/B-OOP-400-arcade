@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.17)
 project(arcade)
 set(CMAKE_CXX_STANDARD 20)
-add_compile_options(-Wall -Wextra)
+add_compile_options(-Wall -Wextra -fno-gnu-unique -fpermissive)
 add_executable(arcade
         src/Main.cpp
         src/ArcadeBorne.cpp

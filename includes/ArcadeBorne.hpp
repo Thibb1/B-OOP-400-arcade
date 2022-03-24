@@ -18,8 +18,6 @@
 namespace Arcade
 {
     typedef std::string Player;
-    typedef Library<IGame> LibraryGame;
-    typedef Library<IDisplay> LibraryDisplay;
 
     class ArcadeBorne : public ArcadeParse {
     public:
@@ -31,7 +29,6 @@ namespace Arcade
         void LoadGameLib();
     private:
         Player player;
-        LibraryGame game;
-        LibraryDisplay display;
+        Library libraries;
     };
 }

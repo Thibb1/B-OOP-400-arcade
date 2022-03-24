@@ -1,6 +1,7 @@
 cmake_minimum_required(VERSION 3.17)
 set(CMAKE_CXX_STANDARD 20)
 set(BUILD_SHARED_LIBS ON)
+add_compile_options(-fno-gnu-unique)
 add_library(sdl2 SHARED src/sdl2.cpp)
 target_include_directories(sdl2 PRIVATE
         ${PROJECT_SOURCE_DIR}/includes

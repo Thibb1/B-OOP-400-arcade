@@ -12,33 +12,56 @@
 #include <dlfcn.h>
 
 #include "ArcadeError.hpp"
+#include "Display.hpp"
+#include "Game.hpp"
 
+typedef std::string LibName;
 namespace Arcade
 {
-    typedef std::string LibName;
-    template<typename Lib>
     class Library {
     private:
-        void *handle = nullptr;
-        Lib *library = nullptr;
+        void *GameHandle = nullptr;
+        void *DisplayHandle = nullptr;
+        IGame *game = nullptr;
+        IDisplay *display = nullptr;
+
     public:
         Library() noexcept = default;
         ~Library() noexcept {
-            if (handle)
-                dlclose(handle);
-            library = nullptr;
-            handle = nullptr;
+            if (GameHandle)
+                dlclose(GameHandle);
+            if (DisplayHandle)
+                dlclose(DisplayHandle);
+            game = nullptr;
+            display = nullptr;
+            GameHandle = nullptr;
+            DisplayHandle = nullptr;
         }
-        explicit Library(const LibName& libName) : handle(dlopen(libName.c_str(), RTLD_NOW | RTLD_LOCAL)){
-            if (!handle)
-                throw ArcadeRuntimeError(dlerror());
-            auto EntryPoint = dlsym(handle, "entry_point");
+        void LoadGame(const LibName& GameName) {
+            if (GameHandle)
+                dlclose(GameHandle);
+            GameHandle = dlopen(GameName.c_str(), RTLD_NOW);
+            if (!GameHandle)
+                throw Arcade::ArcadeRuntimeError(dlerror());
+            dlerror();
+            void *EntryPoint = dlsym(GameHandle, "entry_point");
             if (!EntryPoint)
-                throw ArcadeRuntimeError(dlerror());
-            library = reinterpret_cast<Lib *(*)()>(EntryPoint)();
+                throw Arcade::ArcadeRuntimeError(dlerror());
+            game = reinterpret_cast<IGame *(*)()>(EntryPoint)();
         }
-        Lib *GetLibrary() {
-            return library;
+        void LoadDisplay(const LibName& DisplayName) {
+            if (DisplayHandle)
+                dlclose(GameHandle);
+            DisplayHandle = dlopen(DisplayName.c_str(), RTLD_NOW);
+            if (!DisplayHandle)
+                throw Arcade::ArcadeRuntimeError(dlerror());
+            dlerror();
+            void *EntryPoint = dlsym(DisplayHandle, "entry_point");
+            if (!EntryPoint)
+                throw Arcade::ArcadeRuntimeError(dlerror());
+            display = reinterpret_cast<IDisplay *(*)()>(EntryPoint)();
         }
+        IGame *GetGame() {return game;}
+        IDisplay *GetDisplay() {return display;}
     };
 }

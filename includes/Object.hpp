@@ -55,5 +55,9 @@ namespace Arcade
         ~Text() override = default;
         std::string getText() {return text;}
         Position getPosition() {return position;}
+        void setText(std::string NewText) {
+            if (NewText != text)
+                text = std::move(NewText);
+        }
     };
 }

@@ -12,11 +12,10 @@ using namespace std::chrono_literals;
 Arcade::ArcadeBorne::ArcadeBorne(int NbArguments, char **Arguments) : ArcadeParse(NbArguments, Arguments)
 {
     DisplayLibs();
-    GetPlayerName();
-    game = LibraryGame("./lib/arcade_Menu.so");
+    libraries.LoadGame("./lib/arcade_Menu.so");
     LoadGraphicLib();
     while (true) {
-        Input input = display.GetLibrary()->GetInput();
+        Input input = libraries.GetDisplay()->GetInput();
         switch (input) {
             case EXIT:
                 return;
@@ -25,7 +24,7 @@ Arcade::ArcadeBorne::ArcadeBorne(int NbArguments, char **Arguments) : ArcadePars
                 LoadGraphicLib();
                 break;
             case P:
-                CurrentGraphic = (CurrentGraphic - 1) % int (Graphics.size());
+                CurrentGraphic = (CurrentGraphic - 1) & int (Graphics.size() - 1);
                 LoadGraphicLib();
                 break;
             case F:
@@ -33,24 +32,24 @@ Arcade::ArcadeBorne::ArcadeBorne(int NbArguments, char **Arguments) : ArcadePars
                 LoadGameLib();
                 break;
             case B:
-                CurrentGame = (CurrentGame - 1) % int (Games.size());
+                CurrentGame = (CurrentGame - 1) & int (Games.size() - 1);
                 LoadGameLib();
                 break;
             case M:
-                game = LibraryGame("./lib/arcade_Menu.so");
+                libraries.LoadGame("./lib/arcade_Menu.so");
                 break;
             case R:
-                game.GetLibrary()->ResetGame();
+                libraries.GetGame()->ResetGame();
                 break;
             default:
-                display.GetLibrary()->ClearScreen();
-                game.GetLibrary()->GetScore();
-                auto objects = game.GetLibrary()->GameLoop(input);
+                libraries.GetDisplay()->ClearScreen();
+                libraries.GetGame()->GetScore();
+                auto objects = libraries.GetGame()->GameLoop(input);
                 if (!objects.empty()) {
                     for (auto &object: objects)
-                        display.GetLibrary()->DrawObject(object);
+                        libraries.GetDisplay()->DrawObject(object);
                 }
-                display.GetLibrary()->RefreshScreen();
+                libraries.GetDisplay()->RefreshScreen();
                 break;
         }
         std::this_thread::sleep_for(6000us);
@@ -78,10 +77,10 @@ void Arcade::ArcadeBorne::GetPlayerName()
 
 void Arcade::ArcadeBorne::LoadGraphicLib()
 {
-    display = LibraryDisplay(Graphics[CurrentGraphic]);
+   libraries.LoadDisplay(Graphics[CurrentGraphic]);
 }
 
 void Arcade::ArcadeBorne::LoadGameLib()
 {
-    game = LibraryGame (Games[CurrentGame]);
+    libraries.LoadGame(Games[CurrentGame]);
 }
