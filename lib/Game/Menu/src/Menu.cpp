@@ -15,10 +15,10 @@ extern "C" Arcade::menu *Arcade::entry_point()
 Arcade::menu::menu() : Score(0), CurrentGame(0)
 {
     GetGameLibraries();
-    Images.push_back(std::make_shared<Tile>("contents/Arcade.png", 'X', BLUE, 0, 0));
+    Images.push_back(std::make_shared<Tile>("contents/Arcade.png", ' ', BLUE, 0, 0));
     GameTile = std::make_shared<Text>(Games[CurrentGame], WHITE, 0, 1);
-    //GamePic = std::make_shared<Tile>("")
-    texts.push_back(std::make_shared<Text>("Hello", WHITE, 5, 5));
+    GamePic = std::make_shared<Tile>("contents/arcade_pacman.png", ' ', BLUE,5,14);
+    texts.push_back(std::make_shared<Text>("Hello", WHITE, 0, 0));
 }
 
 std::vector<Arcade::Object> Arcade::menu::GameLoop(Input input)
@@ -31,6 +31,7 @@ std::vector<Arcade::Object> Arcade::menu::GameLoop(Input input)
     if (input == ARROW_LEFT || input == ARROW_RIGHT) {
         GameTile.get()->setText(Games[CurrentGame]);
     }
+    objects.push_back(GamePic);
     for (auto &Image : Images)
         objects.push_back(Image);
     for (auto &Text : texts)
@@ -43,6 +44,7 @@ void Arcade::menu::ResetGame()
 {
     Score = 0;
     CurrentGame = 0;
+    GameTile.get()->setText(Games[CurrentGame]);
 }
 
 void Arcade::menu::GetGameLibraries() {
