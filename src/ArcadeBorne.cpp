@@ -12,9 +12,11 @@ using namespace std::chrono_literals;
 Arcade::ArcadeBorne::ArcadeBorne(int NbArguments, char **Arguments) : ArcadeParse(NbArguments, Arguments)
 {
     DisplayLibs();
+
     GetPlayerName();
-    libraries.LoadGame("./lib/arcade_Menu.so");
     LoadGraphicLib();
+
+    libraries.LoadGame("./lib/arcade_Menu.so");
     while (true) {
         Input input = libraries.GetDisplay()->GetInput();
         switch (input) {
