@@ -39,6 +39,7 @@ namespace Arcade
         ~Tile() override = default;
         TexturePath getTexturePath() {return texturePath;}
         Position getPosition() {return position;}
+        [[nodiscard]] int getCharacter() const {return character;}
         [[nodiscard]] int getRotation() const {return rotation;}
     };
 
