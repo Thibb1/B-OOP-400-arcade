@@ -25,7 +25,6 @@ namespace Arcade
 
     class menu : public IGame {
     private:
-        int Score;
         int CurrentGame;
         std::vector<Object> Images;
         TextObject GameTile;
@@ -38,7 +37,7 @@ namespace Arcade
         ~menu() override = default;
         void GetGameLibraries();
         std::vector<Object> GameLoop(Input input) override;
-        int GetScore() override {return Score;}
+        int GetScore() override {return CurrentGame;}
         void ResetGame() override;
     };
     extern "C" menu *entry_point();

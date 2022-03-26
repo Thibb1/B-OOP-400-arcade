@@ -12,7 +12,7 @@ extern "C" Arcade::menu *Arcade::entry_point()
     return new Arcade::menu;
 }
 
-Arcade::menu::menu() : Score(0), CurrentGame(0)
+Arcade::menu::menu() : CurrentGame(0)
 {
     GetGameLibraries();
     Images.push_back(std::make_shared<Tile>("contents/Arcade.png", ' ', BLUE, 0, 0));
@@ -46,7 +46,6 @@ std::vector<Arcade::Object> Arcade::menu::GameLoop(Input input)
 
 void Arcade::menu::ResetGame()
 {
-    Score = 0;
     CurrentGame = 0;
     GameTile.get()->setText(Games[CurrentGame]);
 }
