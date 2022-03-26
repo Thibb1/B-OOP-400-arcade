@@ -16,7 +16,13 @@ extern "C" Arcade::ncurses *Arcade::entry_point()
 
 Arcade::ncurses::ncurses()
 {
+    newterm("xterm-16colors", stdout, stdin);
     initscr();
+    noecho();
+    keypad(stdscr, true);
+    nodelay(stdscr, true);
+    curs_set(0);
+    start_color();
 }
 
 void Arcade::ncurses::RefreshScreen()
@@ -26,11 +32,10 @@ void Arcade::ncurses::RefreshScreen()
 
 Arcade::Input Arcade::ncurses::GetInput()
 {
-    auto InputUser = static_cast<Input>(NULL);
+    Input InputUser = NOTHING;
     int ch = getch();
 
-    while (ch != KEY_F(2)) {
-        ch = getch();
+    while (ch != ERR) {
         if (ch == KEY_LEFT)
             InputUser = ARROW_LEFT;
         else if (ch == KEY_RIGHT)
@@ -53,8 +58,9 @@ Arcade::Input Arcade::ncurses::GetInput()
             InputUser = R;
         else if (ch == KEY_ENTER)
             InputUser = ENTER;
-        else if (ch == KEY_EXIT)
+        else if (ch == 27)
             InputUser = EXIT;
+        ch = getch();
     }
     return InputUser;
 }
@@ -66,27 +72,32 @@ void Arcade::ncurses::ClearScreen()
 
 void Arcade::ncurses::DrawObject(Arcade::Object object)
 {
-    /*auto Tile = dynamic_cast<Arcade::Tile *>(object.get());
+    auto Tile = dynamic_cast<Arcade::Tile *>(object.get());
     if (Tile)
         DrawTile(Tile);
     auto Text = dynamic_cast<Arcade::Text *>(object.get());
     if (Text)
-        DrawText(Text);*/
+        DrawText(Text);
 }
 
 void Arcade::ncurses::DrawText(Arcade::Text *pText)
 {
-
+    std::cout << pText->getText() << std::endl;
+    mvprintw(int (pText->getPosition().second), int (pText->getPosition().first), pText->getText().c_str());
 }
 
 void Arcade::ncurses::DrawTile(Arcade::Tile *Tile)
 {
-
+    (void) Tile;
 }
 
 
 Arcade::ncurses::~ncurses()
 {
-    dprintf(2, "world\n");
+    echo();
+    curs_set(1);
+    keypad(stdscr, false);
+    nodelay(stdscr, false);
+    nocbreak();
     endwin();
 }

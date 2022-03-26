@@ -87,7 +87,6 @@ void Arcade::ArcadeBorne::GetPlayerName()
 
 void Arcade::ArcadeBorne::LoadGraphicLib()
 {
-    std::cout << CurrentGraphic << std::endl;
     libraries.LoadDisplay(Graphics[CurrentGraphic]);
 }
 

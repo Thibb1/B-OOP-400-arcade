@@ -28,18 +28,11 @@ namespace Arcade
     public:
         Library() noexcept = default;
         ~Library() noexcept {
-            if (GameHandle)
-                dlclose(GameHandle);
-            if (DisplayHandle)
-                dlclose(DisplayHandle);
-            game = nullptr;
-            display = nullptr;
-            GameHandle = nullptr;
-            DisplayHandle = nullptr;
+            UnloadDisplay();
+            UnloadGame();
         }
         void LoadGame(const LibName& GameName) {
-            if (GameHandle)
-                dlclose(GameHandle);
+            UnloadGame();
             GameHandle = dlopen(GameName.c_str(), RTLD_NOW);
             if (!GameHandle)
                 throw Arcade::ArcadeRuntimeError(dlerror());
@@ -50,8 +43,7 @@ namespace Arcade
             game = reinterpret_cast<IGame *(*)()>(EntryPoint)();
         }
         void LoadDisplay(const LibName& DisplayName) {
-            if (DisplayHandle)
-                dlclose(GameHandle);
+            UnloadDisplay();
             DisplayHandle = dlopen(DisplayName.c_str(), RTLD_NOW);
             if (!DisplayHandle)
                 throw Arcade::ArcadeRuntimeError(dlerror());
@@ -60,6 +52,20 @@ namespace Arcade
             if (!EntryPoint)
                 throw Arcade::ArcadeRuntimeError(dlerror());
             display = reinterpret_cast<IDisplay *(*)()>(EntryPoint)();
+        }
+        void UnloadGame() noexcept {
+            delete game;
+            game = nullptr;
+            if (GameHandle)
+                dlclose(GameHandle);
+            GameHandle = nullptr;
+        }
+        void UnloadDisplay() noexcept {
+            delete display;
+            display = nullptr;
+            if (DisplayHandle)
+                dlclose(DisplayHandle);
+            DisplayHandle = nullptr;
         }
         IGame *GetGame() {return game;}
         IDisplay *GetDisplay() {return display;}

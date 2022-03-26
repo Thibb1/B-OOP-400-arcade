@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.17)
 set(CMAKE_CXX_STANDARD 20)
 set(BUILD_SHARED_LIBS ON)
 add_library(ncurses SHARED src/ncurses.cpp)
-add_compile_options(-fno-gnu-unique -lncurses)
+add_compile_options(-fno-gnu-unique)
 target_link_libraries(ncurses PRIVATE curses)
 target_include_directories(ncurses PRIVATE
         ${PROJECT_SOURCE_DIR}/includes
