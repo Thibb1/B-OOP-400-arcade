@@ -27,8 +27,10 @@ namespace Arcade
         void GetPlayerName();
         void LoadGraphicLib();
         void LoadGameLib();
+        static int Modulo(int, int);
     private:
         Player player;
         Library libraries;
+        bool InMenu;
     };
 }
