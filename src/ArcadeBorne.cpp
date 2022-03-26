@@ -9,7 +9,7 @@
 
 using namespace std::chrono_literals;
 
-Arcade::ArcadeBorne::ArcadeBorne(int NbArguments, char **Arguments) : ArcadeParse(NbArguments, Arguments)
+Arcade::ArcadeBorne::ArcadeBorne(int NbArguments, char **Arguments) : ArcadeParse(NbArguments, Arguments), InMenu(true)
 {
     DisplayLibs();
 
@@ -20,25 +20,33 @@ Arcade::ArcadeBorne::ArcadeBorne(int NbArguments, char **Arguments) : ArcadePars
     while (true) {
         Input input = libraries.GetDisplay()->GetInput();
         switch (input) {
+            case ENTER:
+                if (InMenu) {
+                    CurrentGraphic = libraries.GetGame()->GetScore();
+                    LoadGameLib();
+                    InMenu = false;
+                }
+                break;
             case EXIT:
                 return;
             case N:
-                CurrentGraphic = (CurrentGraphic + 1) % int (Graphics.size());
+                CurrentGraphic = Modulo(CurrentGraphic + 1, int (Graphics.size()));
                 LoadGraphicLib();
                 break;
             case P:
-                CurrentGraphic = (CurrentGraphic - 1) & int (Graphics.size() - 1);
+                CurrentGraphic = Modulo(CurrentGraphic - 1, int (Graphics.size()));
                 LoadGraphicLib();
                 break;
             case F:
-                CurrentGame = (CurrentGame + 1) % int (Games.size());
+                CurrentGame = Modulo(CurrentGame + 1, int (Games.size()));
                 LoadGameLib();
                 break;
             case B:
-                CurrentGame = (CurrentGame - 1) & int (Games.size() - 1);
+                CurrentGame = Modulo(CurrentGame - 1, int (Games.size()));
                 LoadGameLib();
                 break;
             case M:
+                InMenu = true;
                 libraries.LoadGame("./lib/arcade_Menu.so");
                 break;
             case R:
@@ -46,7 +54,6 @@ Arcade::ArcadeBorne::ArcadeBorne(int NbArguments, char **Arguments) : ArcadePars
                 break;
             default:
                 libraries.GetDisplay()->ClearScreen();
-                libraries.GetGame()->GetScore();
                 auto objects = libraries.GetGame()->GameLoop(input);
                 if (!objects.empty()) {
                     for (auto &object: objects)
@@ -80,10 +87,15 @@ void Arcade::ArcadeBorne::GetPlayerName()
 
 void Arcade::ArcadeBorne::LoadGraphicLib()
 {
-   libraries.LoadDisplay(Graphics[CurrentGraphic]);
+    std::cout << CurrentGraphic << std::endl;
+    libraries.LoadDisplay(Graphics[CurrentGraphic]);
 }
 
 void Arcade::ArcadeBorne::LoadGameLib()
 {
     libraries.LoadGame(Games[CurrentGame]);
+}
+
+int Arcade::ArcadeBorne::Modulo(int a, int b) {
+    return (b + (a % b)) % b;
 }
