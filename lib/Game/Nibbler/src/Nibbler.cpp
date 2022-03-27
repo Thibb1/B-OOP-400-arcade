@@ -12,7 +12,7 @@ extern "C" Arcade::Nibbler *Arcade::entry_point()
     return new Arcade::Nibbler;
 }
 
-Arcade::Nibbler::Nibbler() : position(5, 5), Direction(ARROW_LEFT), Score(0), Size(4)
+Arcade::Nibbler::Nibbler() : position(5, 5), Direction(ARROW_LEFT), Score(0), Size(3)
 {
     std::fstream WallsFile("contents/Nibbler.txt");
     std::string Line;
@@ -26,6 +26,10 @@ Arcade::Nibbler::Nibbler() : position(5, 5), Direction(ARROW_LEFT), Score(0), Si
         }
         y++;
     }
+    SnakeHead = std::make_shared<Tile>("contents/SnakeHead.png", HEAD, BLUE, position.first, position.second);
+    SnakeHead->setRotation(180);
+    for (int x = 1; x <= Size; x++)
+        SnakeBody.push_back(std::make_shared<Tile>("contents/SnakeBody.png", TAIL, BLUE,position.first + float (x),position.second));
 }
 
 void Arcade::Nibbler::ResetGame()
@@ -48,6 +52,10 @@ void Arcade::Nibbler::NibblerFruitGeneration()
  std::vector<Arcade::Object> Arcade::Nibbler::GameLoop(Input input)
 {
     std::vector<Object> objects;
+    SnakeHead->setPosition(position);
+    objects.push_back(SnakeHead);
+    for (auto &BodyPart : SnakeBody)
+        objects.push_back(BodyPart);
     for (auto &Wall: Walls)
         objects.push_back(Wall);
     for (auto &Text : Texts)

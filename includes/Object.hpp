@@ -41,6 +41,8 @@ namespace Arcade
         Position getPosition() {return position;}
         [[nodiscard]] int getCharacter() const {return character;}
         [[nodiscard]] int getRotation() const {return rotation;}
+        void setPosition(Position NewPosition) {position = NewPosition;}
+        void setRotation(int NewRotation) {rotation = NewRotation;}
     };
 
     class Text : public IObject {

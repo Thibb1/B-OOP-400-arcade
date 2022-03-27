@@ -35,6 +35,8 @@ namespace Arcade
         int Size;
         std::vector<TextObject> Texts;
         std::vector<TileObject> Walls;
+        TileObject SnakeHead;
+        std::vector<TileObject> SnakeBody;
     public:
         Nibbler();
         ~Nibbler() override = default;
