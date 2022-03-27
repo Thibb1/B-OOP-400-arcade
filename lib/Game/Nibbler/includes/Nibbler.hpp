@@ -44,6 +44,8 @@ namespace Arcade
         int GetScore() override {return Score;}
         void ResetGame() override;
         void NibblerFruitGeneration();
+
+        void MoveSnake(Input input);
     };
     extern "C" Nibbler *entry_point();
 }

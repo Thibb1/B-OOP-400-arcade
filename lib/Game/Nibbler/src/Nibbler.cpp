@@ -52,6 +52,7 @@ void Arcade::Nibbler::NibblerFruitGeneration()
  std::vector<Arcade::Object> Arcade::Nibbler::GameLoop(Input input)
 {
     std::vector<Object> objects;
+    MoveSnake(input);
     SnakeHead->setPosition(position);
     objects.push_back(SnakeHead);
     for (auto &BodyPart : SnakeBody)
@@ -61,6 +62,45 @@ void Arcade::Nibbler::NibblerFruitGeneration()
     for (auto &Text : Texts)
         objects.push_back(Text);
     return objects;
+}
+
+void Arcade::Nibbler::MoveSnake(Input input) {
+    if (input != Direction) {
+        switch (input) {
+            case ARROW_LEFT:
+                if (Direction == ARROW_RIGHT)
+                    break;
+                Direction = input;
+                SnakeHead->setRotation(180);
+                break;
+            case ARROW_RIGHT:
+                if (Direction == ARROW_LEFT)
+                    break;
+                Direction = input;
+                SnakeHead->setRotation(0);
+                break;
+            case ARROW_DOWN:
+                if (Direction == ARROW_UP)
+                    break;
+                Direction = input;
+                SnakeHead->setRotation(90);
+                break;
+            case ARROW_UP:
+                if (Direction == ARROW_DOWN)
+                    break;
+                Direction = input;
+                SnakeHead->setRotation(-90);
+                break;
+            default:
+                break;
+        }
+    }
+    switch (Direction) {
+        case ARROW_LEFT:
+            break;
+        default:
+            break;
+    }
 }
 
 /*std::vector<std::shared_ptr<Arcade::IObject>>*/
