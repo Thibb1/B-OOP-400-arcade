@@ -37,8 +37,9 @@ Arcade::Nibbler::Nibbler() : position(5, 5), Direction(ARROW_LEFT), LastDirectio
     Fruit = std::make_shared<Tile>("contents/SnakeHead.png", FRUIT, BLUE, 1, 1);
     for (int x = 1; x <= Size; x++)
         SnakeBody.push_back(std::make_shared<Tile>("contents/SnakeBody.png", TAIL, BLUE,position.first + float (x),position.second));
-    GameOverText.push_back(std::make_shared<Text>("press R to restart", WHITE, 0 , Height));
-    GameOverText.push_back(std::make_shared<Text>("press M for menu", WHITE, 0 , Height + 1));
+    GameOverText.push_back(std::make_shared<Text>("press R to restart", WHITE, 0 , Height + 1));
+    GameOverText.push_back(std::make_shared<Text>("press M for menu", WHITE, 0 , Height + 2));
+    ScoreText = std::make_shared<Text>("Score : " + std::to_string(Score), WHITE, 0, Height);
     AddFruit();
 }
 
@@ -59,6 +60,7 @@ void Arcade::Nibbler::ResetGame()
     for (int x = 1; x <= Size; x++)
         SnakeBody.push_back(std::make_shared<Tile>("contents/SnakeBody.png", TAIL, BLUE,position.first + float (x),position.second));
     AddFruit();
+    ScoreText->setText("Score : " + std::to_string(Score));
 }
 
 void Arcade::Nibbler::AddFruit()
@@ -96,6 +98,7 @@ void Arcade::Nibbler::AddFruit()
     if (!CanMove)
         for (auto &Text : GameOverText)
             objects.push_back(Text);
+    objects.push_back(ScoreText);
     return objects;
 }
 
@@ -158,8 +161,11 @@ void Arcade::Nibbler::MoveSnake(Input input) {
             SnakeBody.push_front(std::make_shared<Tile>("contents/SnakeBody.png", TAIL, BLUE, BackBodyPosition.first, BackBodyPosition.second));
             if (!Eating)
                 SnakeBody.pop_back();
-            else
+            else {
+                Score++;
+                ScoreText->setText("Score : " + std::to_string(Score));
                 AddFruit();
+            }
             Eating = false;
             if (Speed > 140)
                 Speed -= 1;

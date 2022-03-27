@@ -46,6 +46,7 @@ namespace Arcade
         int Speed;
         std::chrono::high_resolution_clock::time_point Clock;
         std::vector<TextObject> GameOverText;
+        TextObject ScoreText;
         std::vector<TileObject> Walls;
         std::map<Position, int> MapObjects;
         Position FruitPos;
