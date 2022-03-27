@@ -41,6 +41,7 @@ namespace Arcade
         int Score;
         int Size;
         int Speed;
+        int Height;
         std::chrono::high_resolution_clock::time_point Clock;
         std::vector<TextObject> GameOverText;
         std::vector<TileObject> Walls;

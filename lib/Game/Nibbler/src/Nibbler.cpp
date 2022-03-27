@@ -12,28 +12,27 @@ extern "C" Arcade::Nibbler *Arcade::entry_point()
     return new Arcade::Nibbler;
 }
 
-Arcade::Nibbler::Nibbler() : position(5, 5), Direction(ARROW_LEFT), LastDirection(Direction), Score(0), Size(3), Speed(500), Clock(NOW), CanMove(true)
+Arcade::Nibbler::Nibbler() : position(5, 5), Direction(ARROW_LEFT), LastDirection(Direction), Score(0), Size(3), Speed(500), Height(0), Clock(NOW), CanMove(true)
 {
     std::fstream WallsFile("contents/Nibbler.txt");
     std::string Line;
-    int y = 0;
     if (!WallsFile.is_open())
         throw ArcadeMissingError("contents/Nibbler.txt");
     while (std::getline(WallsFile, Line)) {
         for (int x = 0; x < int (Line.size()); x++) {
             if (Line[x] == WALL) {
-                Walls.push_back(std::make_shared<Tile>("contents/wall.png", WALL, BLUE, x, y));
-                MapObjects[std::make_pair(x, y)] = WALL;
+                Walls.push_back(std::make_shared<Tile>("contents/wall.png", WALL, BLUE, x, Height));
+                MapObjects[std::make_pair(x, Height)] = WALL;
             }
         }
-        y++;
+        Height++;
     }
     SnakeHead = std::make_shared<Tile>("contents/SnakeHead.png", HEAD, BLUE, position.first, position.second);
     SnakeHead->setRotation(180);
     for (int x = 1; x <= Size; x++)
         SnakeBody.push_back(std::make_shared<Tile>("contents/SnakeBody.png", TAIL, BLUE,position.first + float (x),position.second));
-    GameOverText.push_back(std::make_shared<Text>("press R to restart", WHITE, 0 , 0));
-    GameOverText.push_back(std::make_shared<Text>("press M for menu", WHITE, 0 , 1));
+    GameOverText.push_back(std::make_shared<Text>("press R to restart", WHITE, 0 , Height));
+    GameOverText.push_back(std::make_shared<Text>("press M for menu", WHITE, 0 , Height + 1));
 }
 
 void Arcade::Nibbler::ResetGame()
@@ -143,4 +142,7 @@ void Arcade::Nibbler::MoveSnake(Input input) {
 void Arcade::Nibbler::CheckMovement(Position NewPosition) {
     if (MapObjects.find(NewPosition) != MapObjects.end())
         CanMove = false;
+    for (auto &BodyPart : SnakeBody)
+        if (NewPosition == BodyPart->getPosition())
+            CanMove = false;
 }

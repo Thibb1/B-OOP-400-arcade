@@ -16,7 +16,6 @@ extern "C" Arcade::ncurses *Arcade::entry_point()
 
 Arcade::ncurses::ncurses()
 {
-    newterm("xterm-16colors", stdout, stdin);
     initscr();
     noecho();
     keypad(stdscr, true);
@@ -56,7 +55,7 @@ Arcade::Input Arcade::ncurses::GetInput()
             InputUser = M;
         else if (ch == 114 || ch == 82)
             InputUser = R;
-        else if (ch == KEY_ENTER)
+        else if (ch == 10)
             InputUser = ENTER;
         else if (ch == 27)
             InputUser = EXIT;
