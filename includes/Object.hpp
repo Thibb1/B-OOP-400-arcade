@@ -11,7 +11,7 @@
 
 namespace Arcade
 {
-    enum Input {NOTHING, ARROW_LEFT, ARROW_RIGHT, ARROW_UP, ARROW_DOWN, N, P, F, B, M, R, ENTER, EXIT};
+    enum Input {NOTHING, ARROW_LEFT, ARROW_RIGHT, ARROW_UP, ARROW_DOWN, N, P, F, B, M, R, ENTER, SPACE, EXIT};
     enum Color {BLUE, RED, WHITE, GREEN, PURPLE};
 
     class IObject {

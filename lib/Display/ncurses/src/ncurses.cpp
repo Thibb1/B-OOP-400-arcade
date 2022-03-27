@@ -57,6 +57,8 @@ Arcade::Input Arcade::ncurses::GetInput()
             InputUser = R;
         else if (ch == 10)
             InputUser = ENTER;
+        else if (ch == 32)
+            InputUser = SPACE;
         else if (ch == 27)
             InputUser = EXIT;
         ch = getch();

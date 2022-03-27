@@ -81,6 +81,9 @@ Arcade::Input Arcade::sdl2::GetInput() {
                 case SDLK_RETURN:
                     input = ENTER;
                     break;
+                case SDLK_SPACE:
+                    input = SPACE;
+                    break;
                 case SDLK_ESCAPE:
                     input = EXIT;
                     break;

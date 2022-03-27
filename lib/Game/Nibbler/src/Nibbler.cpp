@@ -132,7 +132,7 @@ void Arcade::Nibbler::MoveSnake(Input input) {
     }
     CheckMovement(position);
     auto Elapsed = std::chrono::duration_cast<std::chrono::milliseconds>(NOW - Clock).count();
-    if (Speed < Elapsed) {
+    if (Speed < Elapsed || (input == SPACE && Elapsed > 140)) {
         Clock = NOW;
         auto BackBodyPosition = position;
         switch (Direction) {
