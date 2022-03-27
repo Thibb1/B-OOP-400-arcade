@@ -40,6 +40,8 @@ namespace Arcade
         int GetScore() override {return CurrentGame;}
         void ResetGame() override;
         static int Modulo(int a, int b);
+
+        void SetGamePicture();
     };
     extern "C" menu *entry_point();
 }

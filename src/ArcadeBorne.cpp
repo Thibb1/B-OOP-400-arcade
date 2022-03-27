@@ -12,22 +12,22 @@ using namespace std::chrono_literals;
 Arcade::ArcadeBorne::ArcadeBorne(int NbArguments, char **Arguments) : ArcadeParse(NbArguments, Arguments), InMenu(true)
 {
     DisplayLibs();
-
     GetPlayerName();
     LoadGraphicLib();
-
     libraries.LoadGame("./lib/arcade_Menu.so");
     while (true) {
         Input input = libraries.GetDisplay()->GetInput();
         switch (input) {
             case ENTER:
-                if (InMenu) {
-                    CurrentGame = libraries.GetGame()->GetScore();
-                    LoadGameLib();
-                    InMenu = false;
-                }
+                if (!InMenu)
+                    break;
+                CurrentGame = libraries.GetGame()->GetScore();
+                LoadGameLib();
+                InMenu = false;
                 break;
             case EXIT:
+                if (!InMenu)
+                    SaveScore();
                 return;
             case N:
                 CurrentGraphic = Modulo(CurrentGraphic + 1, int (Graphics.size()));
@@ -46,10 +46,15 @@ Arcade::ArcadeBorne::ArcadeBorne(int NbArguments, char **Arguments) : ArcadePars
                 LoadGameLib();
                 break;
             case M:
+                if (InMenu)
+                    break;
+                SaveScore();
                 InMenu = true;
                 libraries.LoadGame("./lib/arcade_Menu.so");
                 break;
             case R:
+                if (!InMenu)
+                    SaveScore();
                 libraries.GetGame()->ResetGame();
                 break;
             default:
@@ -82,6 +87,7 @@ void Arcade::ArcadeBorne::GetPlayerName()
 {
     std::cout << "\nEnter your name: ";
     std::cin >> player;
+    player = std::regex_replace(player, std::regex (R"([^\w]*(\w*).*)"),"$1");
     std::cout << "Hello " << player << "!" << std::endl;
 }
 
@@ -97,4 +103,12 @@ void Arcade::ArcadeBorne::LoadGameLib()
 
 int Arcade::ArcadeBorne::Modulo(int a, int b) {
     return (b + (a % b)) % b;
+}
+
+void Arcade::ArcadeBorne::SaveScore() {
+    auto score = libraries.GetGame()->GetScore();
+    std::ofstream Score("./scores/game"+ std::to_string(CurrentGame) + ".txt");
+    if (!Score.is_open())
+        throw ArcadeRuntimeError("Cannot open score file");
+    Score << player + "|" << score << std::endl;
 }

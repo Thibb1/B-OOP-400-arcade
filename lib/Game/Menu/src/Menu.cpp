@@ -30,10 +30,7 @@ std::vector<Arcade::Object> Arcade::menu::GameLoop(Input input)
         CurrentGame = Modulo(CurrentGame + 1, int (Games.size()));
     if (input == ARROW_LEFT || input == ARROW_RIGHT) {
         GameTile.get()->setText(Games[CurrentGame]);
-        Game GamePicturePath = "contents/" + Games[CurrentGame] + ".png";
-        std::ifstream f(GamePicturePath.c_str());
-        if (f.good())
-            GamePic = std::make_shared<Tile>(GamePicturePath, ' ', BLUE,0,0);
+        SetGamePicture();
     }
     objects.push_back(GamePic);
     for (auto &Image : Images)
@@ -48,6 +45,7 @@ void Arcade::menu::ResetGame()
 {
     CurrentGame = 0;
     GameTile.get()->setText(Games[CurrentGame]);
+    SetGamePicture();
 }
 
 void Arcade::menu::GetGameLibraries() {
@@ -59,4 +57,11 @@ void Arcade::menu::GetGameLibraries() {
 
 int Arcade::menu::Modulo(int a, int b) {
     return (b + (a % b)) % b;
+}
+
+void Arcade::menu::SetGamePicture() {
+    Game GamePicturePath = "contents/" + Games[CurrentGame] + ".png";
+    std::ifstream f(GamePicturePath.c_str());
+    if (f.good())
+        GamePic = std::make_shared<Tile>(GamePicturePath, ' ', BLUE,0,0);
 }

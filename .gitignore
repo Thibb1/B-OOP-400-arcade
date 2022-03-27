@@ -1,3 +1,5 @@
 build
 /arcade
 *.so
+scores/*
+!scores/.gitignore

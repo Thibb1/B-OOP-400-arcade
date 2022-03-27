@@ -9,6 +9,7 @@
 
 #include <string>
 #include <thread>
+#include <fstream>
 
 #include "ArcadeParse.hpp"
 #include "Library.hpp"
@@ -32,5 +33,7 @@ namespace Arcade
         Player player;
         Library libraries;
         bool InMenu;
+
+        void SaveScore();
     };
 }
