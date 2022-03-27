@@ -25,9 +25,9 @@ std::vector<Arcade::Object> Arcade::menu::GameLoop(Input input)
 {
     std::vector<Object> objects;
     if (input == ARROW_LEFT)
-        CurrentGame = (CurrentGame - 1) & int (Games.size() - 1);
+        CurrentGame = Modulo(CurrentGame - 1, int (Games.size()));
     if (input == ARROW_RIGHT)
-        CurrentGame = (CurrentGame + 1) % int (Games.size());
+        CurrentGame = Modulo(CurrentGame + 1, int (Games.size()));
     if (input == ARROW_LEFT || input == ARROW_RIGHT) {
         GameTile.get()->setText(Games[CurrentGame]);
         Game GamePicturePath = "contents/" + Games[CurrentGame] + ".png";
@@ -55,4 +55,8 @@ void Arcade::menu::GetGameLibraries() {
     for (const auto &File: std::filesystem::directory_iterator(LibrariesPath))
         if (regex_search(File.path().string(), std::regex (GAME_LIB_PATTERN)))
             Games.push_back(File.path().filename().replace_extension().string());
+}
+
+int Arcade::menu::Modulo(int a, int b) {
+    return (b + (a % b)) % b;
 }

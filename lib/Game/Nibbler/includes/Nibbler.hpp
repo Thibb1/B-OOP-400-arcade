@@ -5,40 +5,44 @@
 ** TODO
 */
 
+#pragma once
+
+#include "Game.hpp"
+
 #include <random>
 #include <memory>
-#include "Game.hpp"
 #include <sstream>
 #include <iostream>
 #include <fstream>
+
+#include "ArcadeError.hpp"
 #include "Display.hpp"
 
-#define ARCADE_NIBBLER_H
-#ifndef ARCADE_NIBBLER_H
+#define FRUIT '*'
+#define WALL '#'
+#define TAIL 's'
+#define HEAD 'S'
 
-
-namespace Arcade {
-
+namespace Arcade
+{
+    typedef std::shared_ptr<Text> TextObject;
+    typedef std::shared_ptr<Tile> TileObject;
     class Nibbler : public IGame {
-
     private:
-        char NibblerHead = "S";
-        char NibblerTail = "s";
-        char NibblerFruit = "*";
-        char NibblerWall =  "#";
-        int x_snak;
-        int y_snak;
-        int count_nibbler;
+        Position position;
+        Input Direction;
+        int Score;
+        int Size;
+        std::vector<TextObject> Texts;
+        std::vector<TileObject> Walls;
     public:
         Nibbler();
-        ~Nibbler() = default:
-        std::vector<std::shared_ptr<Arcade::IObject>> GameLoop(Arcade::Input input) override;
-        void ResetNibbler();
+        ~Nibbler() override = default;
+        std::vector<Object> GameLoop(Input input) override;
+        int GetScore() override {return Score;}
+        void ResetGame() override;
         void NibblerFruitGeneration();
     };
     extern "C" Nibbler *entry_point();
 }
 
-
-
-#endif //ARCADE_NIBBLER_H

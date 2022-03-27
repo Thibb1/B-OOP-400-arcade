@@ -22,7 +22,7 @@ Arcade::ArcadeBorne::ArcadeBorne(int NbArguments, char **Arguments) : ArcadePars
         switch (input) {
             case ENTER:
                 if (InMenu) {
-                    CurrentGraphic = libraries.GetGame()->GetScore();
+                    CurrentGame = libraries.GetGame()->GetScore();
                     LoadGameLib();
                     InMenu = false;
                 }

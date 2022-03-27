@@ -39,6 +39,7 @@ namespace Arcade
         std::vector<Object> GameLoop(Input input) override;
         int GetScore() override {return CurrentGame;}
         void ResetGame() override;
+        static int Modulo(int a, int b);
     };
     extern "C" menu *entry_point();
 }
