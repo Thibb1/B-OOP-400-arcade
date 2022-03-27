@@ -12,27 +12,34 @@ extern "C" Arcade::Nibbler *Arcade::entry_point()
     return new Arcade::Nibbler;
 }
 
-Arcade::Nibbler::Nibbler() : position(5, 5), Direction(ARROW_LEFT), LastDirection(Direction), Score(0), Size(3), Speed(500), Height(0), Clock(NOW), CanMove(true)
+Arcade::Nibbler::Nibbler() : position(5, 5), Direction(ARROW_LEFT), LastDirection(Direction),
+    Score(0), Size(3), Height(0), Width(0),
+    Speed(500), Clock(NOW), CanMove(true), Eating(false),
+    RandomEngine(std::default_random_engine(RandomDevice()))
 {
     std::fstream WallsFile("contents/Nibbler.txt");
     std::string Line;
     if (!WallsFile.is_open())
         throw ArcadeMissingError("contents/Nibbler.txt");
     while (std::getline(WallsFile, Line)) {
+        if (!Width)
+            Width = int (Line.length());
         for (int x = 0; x < int (Line.size()); x++) {
             if (Line[x] == WALL) {
                 Walls.push_back(std::make_shared<Tile>("contents/wall.png", WALL, BLUE, x, Height));
-                MapObjects[std::make_pair(x, Height)] = WALL;
+                MapObjects.emplace(std::make_pair(x, Height), WALL);
             }
         }
         Height++;
     }
     SnakeHead = std::make_shared<Tile>("contents/SnakeHead.png", HEAD, BLUE, position.first, position.second);
     SnakeHead->setRotation(180);
+    Fruit = std::make_shared<Tile>("contents/SnakeHead.png", FRUIT, BLUE, 1, 1);
     for (int x = 1; x <= Size; x++)
         SnakeBody.push_back(std::make_shared<Tile>("contents/SnakeBody.png", TAIL, BLUE,position.first + float (x),position.second));
     GameOverText.push_back(std::make_shared<Text>("press R to restart", WHITE, 0 , Height));
     GameOverText.push_back(std::make_shared<Text>("press M for menu", WHITE, 0 , Height + 1));
+    AddFruit();
 }
 
 void Arcade::Nibbler::ResetGame()
@@ -41,30 +48,46 @@ void Arcade::Nibbler::ResetGame()
     position = {5, 5};
     Direction = ARROW_LEFT;
     LastDirection = Direction;
-    Size = 4;
+    Size = 3;
     Speed = 500;
     Clock = NOW;
     CanMove = true;
+    Eating = false;
     SnakeHead->setPosition(position);
     SnakeHead->setRotation(180);
     SnakeBody.clear();
     for (int x = 1; x <= Size; x++)
         SnakeBody.push_back(std::make_shared<Tile>("contents/SnakeBody.png", TAIL, BLUE,position.first + float (x),position.second));
-    NibblerFruitGeneration();
+    AddFruit();
 }
 
-void Arcade::Nibbler::NibblerFruitGeneration()
+void Arcade::Nibbler::AddFruit()
 {
-    //int fruit = 0;
-
-    //for (; map[fruit] != ' '; fruit++);                   /* map c'est la string contenant la map*/
-    //map[fruit] = NibblerFruit;
+    while (true) {
+        bool InBodyPart = false;
+        FruitPos.second = float (int (RandomEngine()) % (Height - 1) + 1);
+        FruitPos.first = float (int (RandomEngine()) % (Width - 1) + 1);
+        if (MapObjects.find(FruitPos) != MapObjects.end())
+            continue;
+        if (FruitPos == position)
+            continue;
+        for (auto &BodyPart : SnakeBody)
+            if (FruitPos == BodyPart->getPosition()) {
+                InBodyPart = true;
+                break;
+            }
+        if (InBodyPart)
+            continue;
+        break;
+    }
+    Fruit->setPosition(FruitPos);
 }
 
  std::vector<Arcade::Object> Arcade::Nibbler::GameLoop(Input input)
 {
     std::vector<Object> objects;
     MoveSnake(input);
+    objects.push_back(Fruit);
     objects.push_back(SnakeHead);
     for (auto &BodyPart : SnakeBody)
         objects.push_back(BodyPart);
@@ -132,16 +155,24 @@ void Arcade::Nibbler::MoveSnake(Input input) {
         if (CanMove) {
             LastDirection = Direction;
             SnakeHead->setPosition(position);
-            SnakeBody.pop_back();
             SnakeBody.push_front(std::make_shared<Tile>("contents/SnakeBody.png", TAIL, BLUE, BackBodyPosition.first, BackBodyPosition.second));
-            Speed -= 1;
+            if (!Eating)
+                SnakeBody.pop_back();
+            else
+                AddFruit();
+            Eating = false;
+            if (Speed > 140)
+                Speed -= 1;
         }
     }
 }
 
 void Arcade::Nibbler::CheckMovement(Position NewPosition) {
     if (MapObjects.find(NewPosition) != MapObjects.end())
-        CanMove = false;
+        if (MapObjects[NewPosition] == WALL)
+            CanMove = false;
+    if (NewPosition == FruitPos)
+        Eating = true;
     for (auto &BodyPart : SnakeBody)
         if (NewPosition == BodyPart->getPosition())
             CanMove = false;

@@ -18,6 +18,7 @@
 #include <chrono>
 #include <thread>
 #include <deque>
+#include <random>
 
 
 #include "ArcadeError.hpp"
@@ -40,22 +41,28 @@ namespace Arcade
         Input LastDirection;
         int Score;
         int Size;
-        int Speed;
         int Height;
+        int Width;
+        int Speed;
         std::chrono::high_resolution_clock::time_point Clock;
         std::vector<TextObject> GameOverText;
         std::vector<TileObject> Walls;
         std::map<Position, int> MapObjects;
+        Position FruitPos;
         TileObject SnakeHead;
+        TileObject Fruit;
         std::deque<TileObject> SnakeBody;
         bool CanMove;
+        bool Eating;
+        std::random_device RandomDevice;
+        std::default_random_engine RandomEngine;
     public:
         Nibbler();
         ~Nibbler() override = default;
         std::vector<Object> GameLoop(Input input) override;
         int GetScore() override {return Score;}
         void ResetGame() override;
-        void NibblerFruitGeneration();
+        void AddFruit();
         void MoveSnake(Input input);
         void CheckMovement(Position NewPosition);
     };
