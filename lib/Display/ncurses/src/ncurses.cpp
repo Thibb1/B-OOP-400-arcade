@@ -14,7 +14,7 @@ extern "C" Arcade::ncurses *Arcade::entry_point()
     return new Arcade::ncurses;
 }
 
-Arcade::ncurses::ncurses()
+Arcade::ncurses::ncurses() : Clock(NOW), Draw(true)
 {
     initscr();
     noecho();
@@ -26,7 +26,7 @@ Arcade::ncurses::ncurses()
 
 void Arcade::ncurses::RefreshScreen()
 {
-    refresh();
+    wrefresh(stdscr);
 }
 
 Arcade::Input Arcade::ncurses::GetInput()
@@ -68,7 +68,7 @@ Arcade::Input Arcade::ncurses::GetInput()
 
 void Arcade::ncurses::ClearScreen()
 {
-    clear();
+    wclear(stdscr);
 }
 
 void Arcade::ncurses::DrawObject(Arcade::Object object)
@@ -95,10 +95,5 @@ void Arcade::ncurses::DrawTile(Arcade::Tile *Tile)
 
 Arcade::ncurses::~ncurses()
 {
-    echo();
-    curs_set(1);
-    keypad(stdscr, false);
-    nodelay(stdscr, false);
-    nocbreak();
     endwin();
 }
