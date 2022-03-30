@@ -28,6 +28,8 @@ Arcade::ArcadeBorne::ArcadeBorne(int NbArguments, char **Arguments) : ArcadePars
             case EXIT:
                 if (!InMenu)
                     SaveScore();
+                libraries.UnloadDisplay();
+                libraries.UnloadGame();
                 return;
             case N:
                 CurrentGraphic = Modulo(CurrentGraphic + 1, int (Graphics.size()));

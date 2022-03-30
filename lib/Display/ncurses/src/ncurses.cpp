@@ -89,10 +89,7 @@ void Arcade::ncurses::DrawText(Arcade::Text *pText)
 
 void Arcade::ncurses::DrawTile(Arcade::Tile *Tile)
 {
-    char character[2];
-    character[0] = static_cast<char>(Tile->getCharacter());
-    character[1] = '\0';
-    mvprintw(int (Tile->getPosition().second), int (Tile->getPosition().first), character);
+    mvprintw(int (Tile->getPosition().second), int (Tile->getPosition().first), Tile->getCharacter().c_str());
 }
 
 

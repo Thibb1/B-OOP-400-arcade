@@ -27,9 +27,9 @@ namespace Arcade
         void ClearScreen() override;
         void RefreshScreen() override;
         void DrawObject(Object object) override;
-        void DrawTile(Tile *Tile);
+        static void DrawTile(Tile *Tile);
 
-        void DrawText(Text *pText);
+        static void DrawText(Text *pText);
     };
     extern "C" ncurses *entry_point();
 }

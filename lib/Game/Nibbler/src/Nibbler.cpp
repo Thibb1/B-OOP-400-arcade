@@ -19,24 +19,22 @@ Arcade::Nibbler::Nibbler() : position(5, 5), Direction(ARROW_LEFT), LastDirectio
 {
     std::fstream WallsFile("contents/Nibbler.txt");
     std::string Line;
-    if (!WallsFile.is_open())
-        throw ArcadeMissingError("contents/Nibbler.txt");
     while (std::getline(WallsFile, Line)) {
         if (!Width)
             Width = int (Line.length());
         for (int x = 0; x < int (Line.size()); x++) {
             if (Line[x] == WALL) {
-                Walls.push_back(std::make_shared<Tile>("contents/wall.png", WALL, BLUE, x, Height));
+                Walls.push_back(std::make_shared<Tile>("contents/wall.png", ToString(1, WALL), BLUE, x, Height));
                 MapObjects.emplace(std::make_pair(x, Height), WALL);
             }
         }
         Height++;
     }
-    SnakeHead = std::make_shared<Tile>("contents/SnakeHead.png", HEAD, BLUE, position.first, position.second);
+    SnakeHead = std::make_shared<Tile>("contents/SnakeHead.png", ToString(1, HEAD), BLUE, position.first, position.second);
     SnakeHead->setRotation(180);
-    Fruit = std::make_shared<Tile>("contents/SnakeHead.png", FRUIT, BLUE, 1, 1);
+    Fruit = std::make_shared<Tile>("contents/SnakeHead.png", ToString(1, FRUIT), BLUE, 1, 1);
     for (int x = 1; x <= Size; x++)
-        SnakeBody.push_back(std::make_shared<Tile>("contents/SnakeBody.png", TAIL, BLUE,position.first + float (x),position.second));
+        SnakeBody.push_back(std::make_shared<Tile>("contents/SnakeBody.png", ToString(1, TAIL), BLUE,position.first + float (x),position.second));
     GameOverText.push_back(std::make_shared<Text>("press R to restart", WHITE, 0 , Height + 1));
     GameOverText.push_back(std::make_shared<Text>("press M for menu", WHITE, 0 , Height + 2));
     ScoreText = std::make_shared<Text>("Score : " + std::to_string(Score), WHITE, 0, Height);
@@ -58,14 +56,14 @@ void Arcade::Nibbler::ResetGame()
     SnakeHead->setRotation(180);
     SnakeBody.clear();
     for (int x = 1; x <= Size; x++)
-        SnakeBody.push_back(std::make_shared<Tile>("contents/SnakeBody.png", TAIL, BLUE,position.first + float (x),position.second));
+        SnakeBody.push_back(std::make_shared<Tile>("contents/SnakeBody.png", ToString(1, TAIL), BLUE,position.first + float (x),position.second));
     AddFruit();
     ScoreText->setText("Score : " + std::to_string(Score));
 }
 
 void Arcade::Nibbler::AddFruit()
 {
-    while (true) {
+    for (int tries = 0; tries < 1000; tries++) {
         bool InBodyPart = false;
         FruitPos.second = float (int (RandomEngine()) % (Height - 1) + 1);
         FruitPos.first = float (int (RandomEngine()) % (Width - 1) + 1);
@@ -158,7 +156,7 @@ void Arcade::Nibbler::MoveSnake(Input input) {
         if (CanMove) {
             LastDirection = Direction;
             SnakeHead->setPosition(position);
-            SnakeBody.push_front(std::make_shared<Tile>("contents/SnakeBody.png", TAIL, BLUE, BackBodyPosition.first, BackBodyPosition.second));
+            SnakeBody.push_front(std::make_shared<Tile>("contents/SnakeBody.png", ToString(1, TAIL), BLUE, BackBodyPosition.first, BackBodyPosition.second));
             if (!Eating)
                 SnakeBody.pop_back();
             else {

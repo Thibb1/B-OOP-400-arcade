@@ -24,10 +24,11 @@
 #include "ArcadeError.hpp"
 #include "Display.hpp"
 
-#define FRUIT '*'
+#define PACPAC 'C'
+#define POINT '.'
 #define WALL '#'
-#define TAIL 's'
-#define HEAD 'S'
+#define BONUS 'b'
+#define GHOST 'G'
 #define NOW std::chrono::high_resolution_clock::now()
 
 namespace Arcade
@@ -35,39 +36,48 @@ namespace Arcade
     typedef std::string ToString;
     typedef std::shared_ptr<Text> TextObject;
     typedef std::shared_ptr<Tile> TileObject;
-    class Nibbler : public IGame {
+    class Pacman : public IGame {
     private:
         Position position;
         Input Direction;
-        Input LastDirection;
+        Input LastDirectionTry;
         int Score;
-        int Size;
         int Height;
         int Width;
+        int Lives;
+        int DirectionTries;
         int Speed;
         std::chrono::high_resolution_clock::time_point Clock;
         std::vector<TextObject> GameOverText;
         TextObject ScoreText;
         std::vector<TileObject> Walls;
         std::map<Position, int> MapObjects;
-        Position FruitPos;
+        std::map<Position, TileObject> Points;
+        std::map<Position, int> PointType;
         TileObject SnakeHead;
-        TileObject Fruit;
-        std::deque<TileObject> SnakeBody;
-        bool CanMove;
-        bool Eating;
         std::random_device RandomDevice;
         std::default_random_engine RandomEngine;
     public:
-        Nibbler();
-        ~Nibbler() override = default;
+        Pacman();
+        ~Pacman() override = default;
         std::vector<Object> GameLoop(Input input) override;
         int GetScore() override {return Score;}
         void ResetGame() override;
-        void AddFruit();
-        void MoveSnake(Input input);
-        void CheckMovement(Position NewPosition);
+
+        static float Modulo(float a, int b);
+
+        void MovePacman();
+
+        void SetDirection(Input input, bool retry);
+
+        bool WallInPosition(Position NewPosition);
+
+        void PointPacman();
+
+        static Position PositionToIntPosition(Position pair1, bool rounded = false);
+
+        static bool IsInt(float a) ;
     };
-    extern "C" Nibbler *entry_point();
+    extern "C" Pacman *entry_point();
 }
 

@@ -15,9 +15,9 @@ extern "C" Arcade::menu *Arcade::entry_point()
 Arcade::menu::menu() : CurrentGame(0)
 {
     GetGameLibraries();
-    Images.push_back(std::make_shared<Tile>("contents/Arcade.png", ' ', BLUE, 0, 0));
+    Images.push_back(std::make_shared<Tile>("contents/Arcade.png", "", BLUE, 0, 0));
     GameTile = std::make_shared<Text>(Games[CurrentGame], WHITE, 0, 1);
-    GamePic = std::make_shared<Tile>("contents/arcade_pacman.png", ' ', BLUE,0,0);
+    GamePic = std::make_shared<Tile>("contents/arcade_pacman.png", "", BLUE,0,0);
     texts.push_back(std::make_shared<Text>("Hello", WHITE, 0, 0));
 }
 
@@ -63,5 +63,5 @@ void Arcade::menu::SetGamePicture() {
     Game GamePicturePath = "contents/" + Games[CurrentGame] + ".png";
     std::ifstream f(GamePicturePath.c_str());
     if (f.good())
-        GamePic = std::make_shared<Tile>(GamePicturePath, ' ', BLUE,0,0);
+        GamePic = std::make_shared<Tile>(GamePicturePath, Games[CurrentGame], BLUE,0,0);
 }

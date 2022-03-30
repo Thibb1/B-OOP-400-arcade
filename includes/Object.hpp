@@ -27,22 +27,26 @@ namespace Arcade
         TexturePath texturePath;
         Position position;
         Color color;
-        int character;
+        std::string character;
         int rotation;
     public:
-        Tile(TexturePath texturePath, int character, Color color= PURPLE, float positionX = 0, float positionY = 0) :
+        Tile(TexturePath texturePath, std::string character, Color color= PURPLE, float positionX = 0, float positionY = 0) :
             texturePath(std::move(texturePath)),
             position(std::make_pair(positionX, positionY)),
             color(color),
-            character(character),
+            character(std::move(character)),
             rotation(0) {};
         ~Tile() override = default;
         TexturePath getTexturePath() {return texturePath;}
         Position getPosition() {return position;}
-        [[nodiscard]] int getCharacter() const {return character;}
         [[nodiscard]] int getRotation() const {return rotation;}
         void setPosition(Position NewPosition) {position = NewPosition;}
         void setRotation(int NewRotation) {rotation = NewRotation;}
+        void setCharacter(std::string NewText) {
+            if (NewText != character)
+                character = std::move(NewText);
+        }
+        [[nodiscard]] std::string getCharacter() {return character;}
     };
 
     class Text : public IObject {
