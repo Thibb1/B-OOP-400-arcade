@@ -83,7 +83,7 @@ void Arcade::ncurses::DrawObject(Arcade::Object object)
 
 void Arcade::ncurses::DrawText(Arcade::Text *pText)
 {
-    std::cout << pText->getText() << std::endl;
+    //std::cout << pText->getText() << std::endl;
     mvprintw(int (pText->getPosition().second), int (pText->getPosition().first), pText->getText().c_str());
 }
 

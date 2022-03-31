@@ -24,7 +24,7 @@ Arcade::Nibbler::Nibbler() : position(5, 5), Direction(ARROW_LEFT), LastDirectio
             Width = int (Line.length());
         for (int x = 0; x < int (Line.size()); x++) {
             if (Line[x] == WALL) {
-                Walls.push_back(std::make_shared<Tile>("contents/wall.png", ToString(1, WALL), BLUE, x, Height));
+                Walls.push_back(std::make_shared<Tile>("contents/Pacman/Wall.png", ToString(1, WALL), BLUE, x, Height));
                 MapObjects.emplace(std::make_pair(x, Height), WALL);
             }
         }
@@ -32,7 +32,7 @@ Arcade::Nibbler::Nibbler() : position(5, 5), Direction(ARROW_LEFT), LastDirectio
     }
     SnakeHead = std::make_shared<Tile>("contents/SnakeHead.png", ToString(1, HEAD), BLUE, position.first, position.second);
     SnakeHead->setRotation(180);
-    Fruit = std::make_shared<Tile>("contents/SnakeHead.png", ToString(1, FRUIT), BLUE, 1, 1);
+    Fruit = std::make_shared<Tile>("contents/Pacman/Point.png", ToString(1, FRUIT), BLUE, 1, 1);
     for (int x = 1; x <= Size; x++)
         SnakeBody.push_back(std::make_shared<Tile>("contents/SnakeBody.png", ToString(1, TAIL), BLUE,position.first + float (x),position.second));
     GameOverText.push_back(std::make_shared<Text>("press R to restart", WHITE, 0 , Height + 1));

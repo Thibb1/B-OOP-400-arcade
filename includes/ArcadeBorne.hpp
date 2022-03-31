@@ -19,6 +19,7 @@
 namespace Arcade
 {
     typedef std::string Player;
+    typedef std::vector<Object> VObjs;
 
     class ArcadeBorne : public ArcadeParse {
     public:
@@ -29,11 +30,12 @@ namespace Arcade
         void LoadGraphicLib();
         void LoadGameLib();
         static int Modulo(int, int);
+        static size_t HashVector(const VObjs& vec);
     private:
         Player player;
         Library libraries;
         bool InMenu;
-
+        size_t lastVectorHash;
         void SaveScore();
     };
 }

@@ -12,7 +12,7 @@
 namespace Arcade
 {
     enum Input {NOTHING, ARROW_LEFT, ARROW_RIGHT, ARROW_UP, ARROW_DOWN, N, P, F, B, M, R, ENTER, SPACE, EXIT};
-    enum Color {BLUE, RED, WHITE, GREEN, PURPLE};
+    enum Color {BLUE, RED, PINK, WHITE, CYAN, PURPLE, YELLOW};
 
     class IObject {
     public:
@@ -45,6 +45,10 @@ namespace Arcade
         void setCharacter(std::string NewText) {
             if (NewText != character)
                 character = std::move(NewText);
+        }
+        void setTexture(std::string NewTexture) {
+            if (NewTexture != texturePath)
+                texturePath = std::move(NewTexture);
         }
         [[nodiscard]] std::string getCharacter() {return character;}
     };
