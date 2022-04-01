@@ -118,6 +118,8 @@ void Arcade::sdl2::DrawObject(Arcade::Object object)
 void Arcade::sdl2::DrawTile(Arcade::Tile *Tile)
 {
     TexturePath path = Tile->getTexturePath();
+    if (!std::filesystem::exists(path))
+        return;
     if (TextureMap.find(path) == TextureMap.end())
         TextureMap[path] = std::make_shared<sdl2Texture>(path, renderer);
     Texture texture = TextureMap[path];

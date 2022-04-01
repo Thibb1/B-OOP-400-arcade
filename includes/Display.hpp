@@ -8,6 +8,7 @@
 #pragma once
 
 #include <memory>
+#include <filesystem>
 
 #include "Object.hpp"
 

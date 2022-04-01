@@ -27,7 +27,6 @@ namespace Arcade
     private:
         int CurrentGame;
         std::vector<Object> Images;
-        TextObject GameTile;
         Object GamePic;
         std::vector<Object> texts;
         std::vector<Game> Games;

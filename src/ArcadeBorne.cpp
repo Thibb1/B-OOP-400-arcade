@@ -26,8 +26,7 @@ Arcade::ArcadeBorne::ArcadeBorne(int NbArguments, char **Arguments) : ArcadePars
                 InMenu = false;
                 break;
             case EXIT:
-                if (!InMenu)
-                    SaveScore();
+                SaveScore();
                 libraries.UnloadDisplay();
                 libraries.UnloadGame();
                 return;
@@ -40,23 +39,22 @@ Arcade::ArcadeBorne::ArcadeBorne(int NbArguments, char **Arguments) : ArcadePars
                 LoadGraphicLib();
                 break;
             case F:
+                SaveScore();
                 CurrentGame = Modulo(CurrentGame + 1, int (Games.size()));
                 LoadGameLib();
                 break;
             case B:
+                SaveScore();
                 CurrentGame = Modulo(CurrentGame - 1, int (Games.size()));
                 LoadGameLib();
                 break;
             case M:
-                if (InMenu)
-                    break;
                 SaveScore();
                 InMenu = true;
                 libraries.LoadGame("./lib/arcade_Menu.so");
                 break;
             case R:
-                if (!InMenu)
-                    SaveScore();
+                SaveScore();
                 libraries.GetGame()->ResetGame();
                 break;
             default:
@@ -76,7 +74,6 @@ Arcade::ArcadeBorne::ArcadeBorne(int NbArguments, char **Arguments) : ArcadePars
     }
 }
 size_t Arcade::ArcadeBorne::HashVector(const Arcade::VObjs& vec) {
-//    auto std::hash<VObjs>()(p) = std::hash<VObjs>(p.get());
     std::size_t seed = vec.size();
     for(auto& i : vec) {
         auto ptr_ref= std::hash<IObject *>()(i.get());
@@ -129,8 +126,10 @@ int Arcade::ArcadeBorne::Modulo(int a, int b) {
 }
 
 void Arcade::ArcadeBorne::SaveScore() {
+    if (InMenu)
+        return;
     auto score = libraries.GetGame()->GetScore();
-    std::ofstream Score("./scores/game"+ std::to_string(CurrentGame) + ".txt");
+    std::ofstream Score("./scores/game"+ std::to_string(CurrentGame) + ".txt", std::ios_base::app);
     if (!Score.is_open())
         throw ArcadeRuntimeError("Cannot open score file");
     Score << player + "|" << score << std::endl;
