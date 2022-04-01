@@ -14,7 +14,7 @@ extern "C" Arcade::ncurses *Arcade::entry_point()
     return new Arcade::ncurses;
 }
 
-Arcade::ncurses::ncurses() : Clock(NOW), Draw(true)
+Arcade::ncurses::ncurses()
 {
     initscr();
     noecho();

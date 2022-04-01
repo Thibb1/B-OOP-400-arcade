@@ -13,9 +13,8 @@ extern "C" Arcade::Pacman *Arcade::entry_point()
 }
 
 Arcade::Pacman::Pacman() : position(7, 20), Direction(NOTHING), LastDirectionTry(ARROW_UP), DirectionTries(0),
-                           Score(0), Height(0), Width(0), Lives(3), Level(0), Scatter(false),
-                           ClockSpeed(30), Clock(NOW), BonusClock(NOW),
-                           RandomEngine(std::default_random_engine(RandomDevice()))
+                           Score(0), Lives(3), Level(0), Scatter(false), ClockSpeed(30), Clock(NOW),
+                           BonusClock(NOW), Width(0), Height(0)
 {
     std::fstream WallsFile("contents/Pacman/Pacman.txt");
     std::string Line;
@@ -48,12 +47,11 @@ Arcade::Pacman::Pacman() : position(7, 20), Direction(NOTHING), LastDirectionTry
         Height++;
     }
     WallsFile.close();
-    Ghosts.push_back(Ghost("contents/Pacman/Blinky.png", RED, {13, 11}));
+    Ghosts.push_back(Ghost("contents/Pacman/Blinky.png", RED, {13, 11}, 0, false));
     Ghosts.push_back(Ghost("contents/Pacman/Pinky.png", PINK, {11, 14}));
-    Ghosts.push_back(Ghost("contents/Pacman/Inky.png", CYAN, {12, 14}));
-    Ghosts.push_back(Ghost("contents/Pacman/Clyde.png", YELLOW, {15, 14}));
+    Ghosts.push_back(Ghost("contents/Pacman/Inky.png", CYAN, {12, 14}, 15));
+    Ghosts.push_back(Ghost("contents/Pacman/Clyde.png", YELLOW, {15, 14}, 20));
     PacmanObject = std::make_shared<Tile>("contents/Pacman/Pacman.png", ToString(1, PACPAC), BLUE, position.first, position.second);
-    PacmanObject->setRotation(180);
     GameOverText.push_back(std::make_shared<Text>("press R to restart", WHITE, 18, Height + 1));
     GameOverText.push_back(std::make_shared<Text>("press M for menu", WHITE, 0 , Height + 1));
     ScoreText = std::make_shared<Text>("Score : " + std::to_string(Score), WHITE, 20, Height);
@@ -72,12 +70,11 @@ void Arcade::Pacman::ResetGame()
     ClockSpeed = 30;
     Clock = NOW;
     PacmanObject->setPosition(position);
-    PacmanObject->setRotation(180);
+    PacmanObject->setRotation(0);
     for (auto &item: Ghosts)
         item.reset();
     resetPoints();
-    ScoreText->setText("Score : " + std::to_string(Score));
-    LiveLevelText->setText("Lives : " + std::to_string(Lives) + " Level : " + std::to_string(Level));
+    UpdateScores();
 }
 
  std::vector<Arcade::Object> Arcade::Pacman::GameLoop(Input input)
@@ -219,7 +216,7 @@ void Arcade::Pacman::PointPacman() {
             default:
                 break;
         }
-        ScoreText->setText("Score : " + std::to_string(Score));
+        UpdateScores();
     }
 }
 
@@ -238,20 +235,23 @@ bool Arcade::Pacman::IsInt(float a) {
 void Arcade::Pacman::GhostPacman() {
     auto Elapsed = std::chrono::duration_cast<ms>(NOW - BonusClock).count();
     auto IntPosPacman = PositionToIntPosition(position, true);
-    if (Elapsed >= 10000 && Scatter) {
+    if (Scatter && Elapsed >= 10000) {
         for (auto &item: Ghosts)
             item.Scare(Elapsed);
         Scatter = false;
     }
     for (auto &item: Ghosts) {
+        if (Lives)
+            item.Move(this);
         auto IntPosGhost = PositionToIntPosition(item.getPos(), true);
         if (Scatter)
             item.Scare(Elapsed);
         if (IntPosGhost == IntPosPacman) {
-            if (!Scatter) {
+            if (!Scatter && item.isAlive()) {
                 HitGhost();
             } else {
                 item.Kill();
+                Score += 10;
             }
         }
     }
@@ -260,16 +260,15 @@ void Arcade::Pacman::GhostPacman() {
 void Arcade::Pacman::HitGhost() {
     if (Lives) {
         Lives--;
-        LiveLevelText->setText("Lives : " + std::to_string(Lives) + " Level : " + std::to_string(Level));
+        UpdateScores();
     }
     if (Lives) {
         for (auto &item: Ghosts)
             item.reset();
-        ClockSpeed = 30;
         position = {7, 20};
         Direction = NOTHING;
         LastDirectionTry = ARROW_UP;
-        PacmanObject->setRotation(180);
+        PacmanObject->setRotation(0);
         PacmanObject->setPosition(position);
     }
 }
@@ -280,11 +279,11 @@ void Arcade::Pacman::LevelUp() {
     position = {7, 20};
     Direction = NOTHING;
     LastDirectionTry = ARROW_UP;
-    PacmanObject->setRotation(180);
+    PacmanObject->setRotation(0);
     PacmanObject->setPosition(position);
-    if (ClockSpeed > 10)
-        ClockSpeed -= 2;
-    LiveLevelText->setText("Lives : " + std::to_string(Lives) + " Level : " + std::to_string(Level));
+    if (ClockSpeed < 50)
+        ClockSpeed += 2;
+    UpdateScores();
 }
 
 void Arcade::Pacman::resetPoints() {
@@ -297,45 +296,7 @@ void Arcade::Pacman::resetPoints() {
         }
 }
 
-Arcade::Ghost::Ghost(const Path& path, enum Color color, Position StartPosition) : position(StartPosition), startPosition(StartPosition),
-        startTexture(path), Alive(true)
-{
-    GhostObject = std::make_shared<Tile>(path, ToString(1, GHOST), color, StartPosition.first, StartPosition.second);
-}
-
-void Arcade::Ghost::setPosition(Position NewPosition) {
-    position = NewPosition;
-    GhostObject->setPosition(NewPosition);
-}
-
-void Arcade::Ghost::reset() {
-    resetTexture();
-    setPosition(startPosition);
-    Alive = true;
-    Scared = false;
-}
-
-void Arcade::Ghost::resetTexture() {
-    GhostObject->setTexture(startTexture);
-}
-
-void Arcade::Ghost::Kill() {
-    Alive = false;
-    Scared = false;
-    GhostObject->setTexture("contents/Pacman/Eyes.png");
-}
-
-void Arcade::Ghost::Scare(long Since) {
-    if (!Alive)
-        return;
-    if (Since < 10000) {
-        Scared = true;
-        if (Since > 8000 && Since % 350 < 150)
-            resetTexture();
-        else
-            GhostObject->setTexture("contents/Pacman/Scared.png");
-    } else if (Scared) {
-        Scared = false;
-        resetTexture();
-    }
+void Arcade::Pacman::UpdateScores() {
+    ScoreText->setText("Score : " + std::to_string(Score));
+    LiveLevelText->setText("Lives : " + std::to_string(Lives) + " Level : " + std::to_string(Level));
 }

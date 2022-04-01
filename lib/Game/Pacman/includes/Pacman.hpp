@@ -23,6 +23,7 @@
 
 #include "ArcadeError.hpp"
 #include "Display.hpp"
+#include "Ghost.hpp"
 
 #define PACPAC 'C'
 #define POINT '.'
@@ -41,25 +42,7 @@ namespace Arcade
 
     typedef std::shared_ptr<Text> TextObject;
     typedef std::shared_ptr<Tile> TileObject;
-    class Ghost {
-    private:
-        Position position;
-        Position startPosition;
-        TileObject GhostObject;
-        Path startTexture;
-        bool Alive;
-        bool Scared;
-    public:
-        Ghost(const Path&, enum Color, Position);
-        virtual ~Ghost() = default;
-        TileObject getObject() {return GhostObject;}
-        Position getPos() {return position;}
-        void setPosition(Position);
-        void reset();
-        void resetTexture();
-        void Kill();
-        void Scare(long Since);
-    };
+    class Ghost;
 
     class Pacman : public IGame {
     private:
@@ -68,8 +51,6 @@ namespace Arcade
         Input LastDirectionTry;
         int DirectionTries;
         int Score;
-        int Height;
-        int Width;
         int Lives;
         int Level;
         bool Scatter;
@@ -80,18 +61,17 @@ namespace Arcade
         TextObject ScoreText;
         TextObject LiveLevelText;
         std::vector<TileObject> Walls;
-        std::vector<Ghost> Ghosts;
+        std::vector<Arcade::Ghost> Ghosts;
         std::map<Position, int> MapObjects;
         std::map<Position, TileObject> Points;
         std::map<Position, int> PointType;
         TileObject PacmanObject;
-        std::random_device RandomDevice;
-        std::default_random_engine RandomEngine;
     public:
         Pacman();
         ~Pacman() override = default;
         std::vector<Object> GameLoop(Input input) override;
         int GetScore() override {return Score;}
+
         void ResetGame() override;
 
         static float Modulo(float a, int b);
@@ -115,6 +95,13 @@ namespace Arcade
         void LevelUp();
 
         void resetPoints();
+
+        int Width;
+        int Height;
+
+        void UpdateScores();
+
+        Position getPosition() {return position;}
     };
     extern "C" Pacman *entry_point();
 }

@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.17)
 set(CMAKE_CXX_STANDARD 20)
 set(BUILD_SHARED_LIBS ON)
-add_library(pacman SHARED src/Pacman.cpp)
+add_library(pacman SHARED src/Ghost.cpp src/Pacman.cpp)
 add_compile_options(-fno-gnu-unique -Wall -Wextra)
 target_include_directories(pacman PRIVATE
         ${PROJECT_SOURCE_DIR}/includes
