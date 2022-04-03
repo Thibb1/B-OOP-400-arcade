@@ -7,6 +7,7 @@
 
 #pragma once
 
+#include <csignal>
 #include "ArcadeError.hpp"
 #include "ArcadeBorne.hpp"
 #include "ArcadeParse.hpp"

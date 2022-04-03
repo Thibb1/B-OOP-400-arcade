@@ -3,7 +3,7 @@ set(CMAKE_CXX_STANDARD 20)
 set(BUILD_SHARED_LIBS ON)
 add_library(ncurses SHARED src/ncurses.cpp)
 add_compile_options(-fno-gnu-unique)
-target_link_libraries(ncurses PRIVATE curses)
+target_link_libraries(ncurses PRIVATE ncursesw png)
 target_include_directories(ncurses PRIVATE
         ${PROJECT_SOURCE_DIR}/includes
         ${PROJECT_SOURCE_DIR}/lib/Display/ncurses/includes)

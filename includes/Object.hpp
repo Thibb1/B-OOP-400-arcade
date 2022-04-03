@@ -1,5 +1,3 @@
-#include <utility>
-
 /*
 ** EPITECH PROJECT, 2022
 ** Object.hpp
@@ -9,10 +7,21 @@
 
 #pragma once
 
+#include <utility>
+
 namespace Arcade
 {
     enum Input {NOTHING, ARROW_LEFT, ARROW_RIGHT, ARROW_UP, ARROW_DOWN, N, P, F, B, M, R, ENTER, SPACE, EXIT};
-    enum Color {BLUE, RED, PINK, WHITE, CYAN, PURPLE, YELLOW};
+    enum Color {
+        BLUE,
+        RED,
+        GREEN,
+        PINK,
+        WHITE,
+        CYAN,
+        MAGENTA,
+        YELLOW
+    };
 
     class IObject {
     public:
@@ -30,7 +39,7 @@ namespace Arcade
         std::string character;
         int rotation;
     public:
-        Tile(TexturePath texturePath, std::string character, Color color= PURPLE, float positionX = 0, float positionY = 0) :
+        Tile(TexturePath texturePath, std::string character, Color color= MAGENTA, float positionX = 0, float positionY = 0) :
             texturePath(std::move(texturePath)),
             position(std::make_pair(positionX, positionY)),
             color(color),
