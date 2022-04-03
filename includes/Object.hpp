@@ -35,14 +35,14 @@ namespace Arcade
     private:
         TexturePath texturePath;
         Position position;
-        Color color;
+        int color;
         std::string character;
         int rotation;
     public:
-        Tile(TexturePath texturePath, std::string character, Color color= MAGENTA, float positionX = 0, float positionY = 0) :
+        Tile(TexturePath texturePath, std::string character, int color = MAGENTA, float positionX = 0, float positionY = 0) :
             texturePath(std::move(texturePath)),
             position(std::make_pair(positionX, positionY)),
-            color(color),
+            color(color % 256),
             character(std::move(character)),
             rotation(0) {};
         ~Tile() override = default;
@@ -59,22 +59,27 @@ namespace Arcade
             if (NewTexture != texturePath)
                 texturePath = std::move(NewTexture);
         }
+        void setColor(int Color) {
+            color = Color;
+        }
         [[nodiscard]] std::string getCharacter() {return character;}
+        [[nodiscard]] int getColor() const {return color;}
     };
 
     class Text : public IObject {
     private:
         std::string text;
         Position position;
-        Color color;
+        int color;
     public:
-        explicit Text(std::string text, Color color = WHITE, float positionX = 0, float positionY = 0) :
+        explicit Text(std::string text, int color = WHITE, float positionX = 0, float positionY = 0) :
                 text(std::move(text)),
                 position(std::make_pair(positionX, positionY)),
                 color(color) {};
         ~Text() override = default;
         std::string getText() {return text;}
         Position getPosition() {return position;}
+        [[nodiscard]] int getColor() const {return color;}
         void setText(std::string NewText) {
             if (NewText != text)
                 text = std::move(NewText);

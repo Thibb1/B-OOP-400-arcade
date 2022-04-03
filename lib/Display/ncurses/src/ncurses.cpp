@@ -17,21 +17,21 @@ Arcade::ncurses::ncurses()
     setlocale(LC_ALL, "");
     initscr();
     start_color();
+    noecho();
     use_default_colors();
     set_escdelay(0);
-    noecho();
     keypad(stdscr, true);
     nodelay(stdscr, true);
     curs_set(0);
     for (int i = 0; i < COLORS; i++)
         init_extended_pair(i + 1, i, -1);
-    init_pair(BLUE, COLOR_BLUE, COLOR_BLACK);
-    init_pair(RED, COLOR_RED, COLOR_BLACK);
-    init_pair(GREEN, COLOR_GREEN, COLOR_BLACK);
-    init_pair(WHITE, COLOR_WHITE, COLOR_BLACK);
-    init_pair(CYAN, COLOR_CYAN, COLOR_BLACK);
-    init_pair(MAGENTA, COLOR_MAGENTA, COLOR_BLACK);
-    init_pair(YELLOW, COLOR_YELLOW, COLOR_BLACK);
+//    init_pair(BLUE, COLOR_BLUE, COLOR_BLACK);
+//    init_pair(RED, COLOR_RED, COLOR_BLACK);
+//    init_pair(GREEN, COLOR_GREEN, COLOR_BLACK);
+//    init_pair(WHITE, COLOR_WHITE, COLOR_BLACK);
+//    init_pair(CYAN, COLOR_CYAN, COLOR_BLACK);
+//    init_pair(MAGENTA, COLOR_MAGENTA, COLOR_BLACK);
+//    init_pair(YELLOW, COLOR_YELLOW, COLOR_BLACK);
 }
 
 void Arcade::ncurses::RefreshScreen()
@@ -93,13 +93,18 @@ void Arcade::ncurses::DrawObject(Arcade::Object object)
 
 void Arcade::ncurses::DrawText(Arcade::Text *pText)
 {
+    int color = pText->getColor();
+    attron(COLOR_PAIR(color));
     mvprintw(int (pText->getPosition().second), int (pText->getPosition().first), pText->getText().c_str());
+    attroff(COLOR_PAIR(color));
 }
 
 void Arcade::ncurses::DrawTile(Arcade::Tile *Tile)
 {
+    int color = Tile->getColor();
+    attron(COLOR_PAIR(color));
     mvprintw(int(Tile->getPosition().second), int(Tile->getPosition().first), Tile->getCharacter().c_str());
-
+    attroff(COLOR_PAIR(color));
     if (!std::filesystem::exists(Tile->getTexturePath()+"_compressed.png"))
         return;
     Converter conv(Tile->getTexturePath()+"_compressed.png");

@@ -24,21 +24,21 @@ Arcade::Pacman::Pacman() : position(7, 20), Direction(NOTHING), LastDirectionTry
         for (int x = 0; x < int (Line.size()); x++) {
             switch (Line[x]) {
                 case WALL:
-                    Walls.push_back(std::make_shared<Tile>("contents/Pacman/Wall.png", ToString(1, WALL), BLUE, x, Height));
+                    Walls.push_back(std::make_shared<Tile>("contents/Pacman/Wall.png", "█", 27, x, Height));
                     MapObjects.emplace(std::make_pair(x, Height), WALL);
                     break;
                 case DOOR:
-                    Walls.push_back(std::make_shared<Tile>("contents/Pacman/Door.png", ToString(1, DOOR), YELLOW, x, Height));
+                    Walls.push_back(std::make_shared<Tile>("contents/Pacman/Door.png", ToString(1, DOOR), 29, x, Height));
                     MapObjects.emplace(std::make_pair(x, Height), DOOR);
                     break;
                 case POINT:
                     if (x == int (position.first) && Height == int (position.second))
                         break;
-                    Points.emplace(std::make_pair(x, Height), std::make_shared<Tile>("contents/Pacman/Point.png", ToString(1, POINT), BLUE, x, Height));
+                    Points.emplace(std::make_pair(x, Height), std::make_shared<Tile>("contents/Pacman/Point.png", "•", 191, x, Height));
                     PointType.emplace(std::make_pair(x, Height), POINT);
                     break;
                 case BONUS:
-                    Points.emplace(std::make_pair(x, Height), std::make_shared<Tile>("contents/Pacman/Bonus.png", ToString(1, BONUS), BLUE, x, Height));
+                    Points.emplace(std::make_pair(x, Height), std::make_shared<Tile>("contents/Pacman/Bonus.png", "●", 10, x, Height));
                     PointType.emplace(std::make_pair(x, Height), BONUS);
                 default:
                     break;
@@ -47,13 +47,13 @@ Arcade::Pacman::Pacman() : position(7, 20), Direction(NOTHING), LastDirectionTry
         Height++;
     }
     WallsFile.close();
-    Ghosts.push_back(Ghost("contents/Pacman/Blinky.png", RED, {13, 11}, 0, false));
-    Ghosts.push_back(Ghost("contents/Pacman/Pinky.png", PINK, {11, 14}));
-    Ghosts.push_back(Ghost("contents/Pacman/Inky.png", CYAN, {12, 14}, 15));
-    Ghosts.push_back(Ghost("contents/Pacman/Clyde.png", YELLOW, {15, 14}, 20));
+    Ghosts.push_back(Ghost("contents/Pacman/Blinky.png", 2, {13, 11}, 0, false));
+    Ghosts.push_back(Ghost("contents/Pacman/Pinky.png", 6, {11, 14}));
+    Ghosts.push_back(Ghost("contents/Pacman/Inky.png", 52, {12, 14}, 15));
+    Ghosts.push_back(Ghost("contents/Pacman/Clyde.png", 227, {15, 14}, 20));
     PacmanObject = std::make_shared<Tile>("contents/Pacman/Pacman.png", ToString(1, PACPAC), BLUE, position.first, position.second);
-    GameOverText.push_back(std::make_shared<Text>("press R to restart", WHITE, 18, Height + 1));
-    GameOverText.push_back(std::make_shared<Text>("press M for menu", WHITE, 0 , Height + 1));
+    GameOverText.push_back(std::make_shared<Text>("press R to restart", 10, 18, Height + 1));
+    GameOverText.push_back(std::make_shared<Text>("press M for menu", 15, 0 , Height + 1));
     ScoreText = std::make_shared<Text>("Score : " + std::to_string(Score), WHITE, 20, Height);
     LiveLevelText = std::make_shared<Text>("Lives : " + std::to_string(Lives) + " Level : " + std::to_string(Level), WHITE, 0, Height);
 }

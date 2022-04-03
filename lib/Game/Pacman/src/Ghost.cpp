@@ -7,14 +7,14 @@
 
 #include "Ghost.hpp"
 
-Arcade::Ghost::Ghost(const Path& path, enum Color color, Position StartPosition, int stuckTime, bool normal) :
+Arcade::Ghost::Ghost(const Path& path, int color, Position StartPosition, int stuckTime, bool normal) :
         position(StartPosition), startPosition(StartPosition), startTexture(path), Alive(true),
-        Blocked(normal), InSpawn(normal), Normal(normal),
+        Blocked(normal), InSpawn(normal), Normal(normal), Color(color),
         Direction(ARROW_UP), ClockSpeed(50), StuckTime(stuckTime), Clock(NOW), SpeedUp(NOW), StuckClock(NOW)
 {
     std::random_device RandomDevice;
     RandomEngine = std::default_random_engine(RandomDevice());
-    GhostObject = std::make_shared<Tile>(path, ToString(1, GHOST), color, StartPosition.first, StartPosition.second);
+    GhostObject = std::make_shared<Tile>(path, ToString(1, GHOST), Color, StartPosition.first, StartPosition.second);
 }
 
 void Arcade::Ghost::setPosition(Position NewPosition) {
@@ -37,6 +37,7 @@ void Arcade::Ghost::reset() {
 
 void Arcade::Ghost::resetTexture() {
     GhostObject->setTexture(startTexture);
+    GhostObject->setColor(Color);
 }
 
 void Arcade::Ghost::Kill() {
@@ -44,6 +45,7 @@ void Arcade::Ghost::Kill() {
         Alive = false;
         Scared = false;
         GhostObject->setTexture("contents/Pacman/Eyes.png");
+        GhostObject->setColor(196);
         ClockSpeed = 10;
     }
 }
@@ -55,8 +57,10 @@ void Arcade::Ghost::Scare(long Since) {
         Scared = true;
         if (Since > 8000 && Since % 350 < 150)
             resetTexture();
-        else
+        else {
             GhostObject->setTexture("contents/Pacman/Scared.png");
+            GhostObject->setColor(34);
+        }
     } else if (Scared) {
         Scared = false;
         resetTexture();
@@ -122,7 +126,7 @@ void Arcade::Ghost::Move(Pacman *pPacman) {
         MoveToTarget(pPacman);
         GhostObject->setPosition(position);
     }
-    if (ClockSpeed > 10) {
+    if (ClockSpeed > 25) {
         Elapsed = std::chrono::duration_cast<ms>(NOW - SpeedUp).count();
         if (Elapsed > 1000) {
             ClockSpeed--;

@@ -28,6 +28,7 @@ namespace Arcade {
         bool Blocked;
         bool InSpawn;
         bool Normal;
+        int Color;
         bool Left{};
         bool Right{};
         bool Up{};
@@ -40,7 +41,7 @@ namespace Arcade {
         Timer StuckClock;
         std::default_random_engine RandomEngine;
     public:
-        Ghost(const Path&, enum Color, Position, int stuckTime = 10, bool normal = true);
+        Ghost(const Path&, int Color, Position, int stuckTime = 10, bool normal = true);
         virtual ~Ghost() = default;
         TileObject getObject() {return GhostObject;}
         Position getPos() {return position;}

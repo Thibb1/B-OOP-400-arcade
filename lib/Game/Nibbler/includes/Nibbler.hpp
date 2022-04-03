@@ -24,10 +24,7 @@
 #include "ArcadeError.hpp"
 #include "Display.hpp"
 
-#define FRUIT '*'
 #define WALL '#'
-#define TAIL 's'
-#define HEAD 'S'
 #define NOW std::chrono::high_resolution_clock::now()
 
 namespace Arcade
