@@ -37,5 +37,7 @@ namespace Arcade
         bool InMenu;
         size_t lastVectorHash;
         void SaveScore();
+
+        void DisplayScores();
     };
 }

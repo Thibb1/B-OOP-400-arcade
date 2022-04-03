@@ -12,6 +12,7 @@ using namespace std::chrono_literals;
 Arcade::ArcadeBorne::ArcadeBorne(int NbArguments, char **Arguments) : ArcadeParse(NbArguments, Arguments), InMenu(true), lastVectorHash(0)
 {
     DisplayLibs();
+    DisplayScores();
     GetPlayerName();
     LoadGraphicLib();
     libraries.LoadGame("./lib/arcade_Menu.so");
@@ -107,7 +108,6 @@ void Arcade::ArcadeBorne::GetPlayerName()
     std::cout << "\nEnter your name: ";
     std::cin >> player;
     player = std::regex_replace(player, std::regex (R"([^\w]*(\w*).*)"),"$1");
-    std::cout << "Hello " << player << "!" << std::endl;
 }
 
 void Arcade::ArcadeBorne::LoadGraphicLib()
@@ -133,4 +133,32 @@ void Arcade::ArcadeBorne::SaveScore() {
     if (!Score.is_open())
         throw ArcadeRuntimeError("Cannot open score file");
     Score << player + "|" << score << std::endl;
+}
+
+void Arcade::ArcadeBorne::DisplayScores() {
+    for (int i = 0; i < int (Games.size()); i++) {
+        std::string path = "scores/game" + std::to_string(i) + ".txt";
+        if (std::filesystem::exists(path)) {
+            std::cout << "\nHigh-scores for " << Games[i] << ":";
+            std::vector<std::pair<int, std::string>> Scores;
+            std::fstream file(path);
+            std::string line;
+            while (getline(file, line)) {
+                std::stringstream ss(line);
+                std::string name;
+                getline(ss, name, '|');
+                std::string item;
+                getline(ss, item, '|');
+                int score = std::stoi(item);
+                if (score < 1)
+                    continue;
+                Scores.emplace_back(score, name);
+            }
+            std::sort(Scores.rbegin(), Scores.rend());
+            for (const auto& item: Scores)
+                std::cout << "\n" + item.second << ": " << item.first;
+            std::cout << std::endl;
+        }
+
+    }
 }
