@@ -85,4 +85,16 @@ namespace Arcade
                 text = std::move(NewText);
         }
     };
+    class Sound : public IObject
+    {
+    private:
+        std::string Music;
+        bool Looping;
+    public:
+        explicit Sound(std::string path, bool loop = false) : Music(std::move(path)), Looping(loop) {};
+        ~Sound() override = default;
+        [[nodiscard]] std::string getSound() const {return Music;};
+        [[nodiscard]] bool getLoop() const {return Looping;}
+        void setSound(std::string path) {Music = std::move(path);};
+    };
 }

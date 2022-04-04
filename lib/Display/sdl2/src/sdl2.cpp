@@ -14,7 +14,7 @@ extern "C" Arcade::sdl2 *Arcade::entry_point()
 
 Arcade::sdl2::sdl2() : window(nullptr), renderer(nullptr), font(nullptr)
 {
-    if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_EVENTS))
+    if (SDL_Init(SDL_INIT_AUDIO | SDL_INIT_VIDEO | SDL_INIT_EVENTS))
         throw ArcadeRuntimeError();
     window = SDL_CreateWindow("Arcade - SDL", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 1000, 1000, SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE);
     if (!window)
@@ -27,14 +27,18 @@ Arcade::sdl2::sdl2() : window(nullptr), renderer(nullptr), font(nullptr)
     font = TTF_OpenFont("contents/FiraCode-Regular.ttf", 20);
     if (!font)
         throw ArcadeRuntimeError();
+    if (Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, MIX_DEFAULT_CHANNELS, 1024) == -1)
+        throw ArcadeRuntimeError();
 }
 
 Arcade::sdl2::~sdl2()
 {
+    SoundMap.clear();
     TextureMap.clear();
     SDL_DestroyRenderer(renderer);
     SDL_DestroyWindow(window);
     TTF_CloseFont(font);
+    Mix_CloseAudio();
     IMG_Quit();
     TTF_Quit();
     SDL_Quit();
@@ -113,6 +117,9 @@ void Arcade::sdl2::DrawObject(Arcade::Object object)
     auto Text = dynamic_cast<Arcade::Text *>(object.get());
     if (Text)
         DrawText(Text);
+    auto Sound = dynamic_cast<Arcade::Sound *>(object.get());
+    if (Sound)
+        PlaySound(Sound);
 }
 
 void Arcade::sdl2::DrawTile(Arcade::Tile *Tile)
@@ -132,6 +139,15 @@ void Arcade::sdl2::DrawText(Arcade::Text *Text)
     auto TextTexture = std::make_shared<sdl2Texture>(Text->getText(), font, renderer);
     TextTexture->SetPosition(Text->getPosition());
     SDL_RenderCopy(renderer, TextTexture->texture, nullptr, &TextTexture->rectangle);
+}
+
+void Arcade::sdl2::PlaySound(Arcade::Sound *pSound) {
+    SoundPath path = pSound->getSound();
+    if (!std::filesystem::exists(path))
+        return;
+    if (SoundMap.find(path) == SoundMap.end())
+        SoundMap[path] = std::make_shared<sdl2Sound>(path, pSound->getLoop());
+    SoundMap[path]->play();
 }
 
 
@@ -165,4 +181,10 @@ void Arcade::sdl2Texture::SetPosition(Position position)
 {
     rectangle.x = int (position.first * 30);
     rectangle.y = int (position.second * 30);
+}
+
+Arcade::sdl2Sound::sdl2Sound(const Arcade::SoundPath &path, bool loop) : Looping(loop) {
+    music = Mix_LoadMUS(path.c_str());
+    if (!music)
+        throw Arcade::ArcadeMissingError(path);
 }

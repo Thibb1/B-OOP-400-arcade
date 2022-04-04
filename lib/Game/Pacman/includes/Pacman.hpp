@@ -42,6 +42,7 @@ namespace Arcade
 
     typedef std::shared_ptr<Text> TextObject;
     typedef std::shared_ptr<Tile> TileObject;
+    typedef std::shared_ptr<Sound> SoundObject;
     class Ghost;
 
     class Pacman : public IGame {
@@ -60,6 +61,10 @@ namespace Arcade
         std::vector<TextObject> GameOverText;
         TextObject ScoreText;
         TextObject LiveLevelText;
+        SoundObject SoundPacman;
+        std::vector<SoundObject> PacmanSounds;
+        bool Played{};
+        bool Munch;
         std::vector<TileObject> Walls;
         std::vector<Arcade::Ghost> Ghosts;
         std::map<Position, int> MapObjects;

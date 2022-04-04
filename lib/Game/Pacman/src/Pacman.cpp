@@ -56,6 +56,7 @@ Arcade::Pacman::Pacman() : position(7, 20), Direction(NOTHING), LastDirectionTry
     GameOverText.push_back(std::make_shared<Text>("press M for menu", 15, 0 , Height + 1));
     ScoreText = std::make_shared<Text>("Score : " + std::to_string(Score), WHITE, 20, Height);
     LiveLevelText = std::make_shared<Text>("Lives : " + std::to_string(Lives) + " Level : " + std::to_string(Level), WHITE, 0, Height);
+    SoundPacman = std::make_shared<Sound>("contents/Pacman/game_start.wav", true);
 }
 
 void Arcade::Pacman::ResetGame()
@@ -67,6 +68,7 @@ void Arcade::Pacman::ResetGame()
     Lives = 3;
     Level = 0;
     Scatter = false;
+    Played = false;
     ClockSpeed = 30;
     Clock = NOW;
     PacmanObject->setPosition(position);
@@ -80,12 +82,19 @@ void Arcade::Pacman::ResetGame()
  std::vector<Arcade::Object> Arcade::Pacman::GameLoop(Input input)
 {
     std::vector<Object> objects;
+    PacmanSounds.clear();
     SetDirection(input, false);
     MovePacman();
     PointPacman();
     GhostPacman();
+    if (!Played) {
+        Played = true;
+        objects.push_back(SoundPacman);
+    }
     if (Points.empty())
         LevelUp();
+    for (auto &Sound: PacmanSounds)
+        objects.push_back(Sound);
     for (auto &Wall: Walls)
         objects.push_back(Wall);
     for (auto &Point: Points)
@@ -206,12 +215,18 @@ void Arcade::Pacman::PointPacman() {
             case POINT:
                 Points.erase(IntPos);
                 Score += 10;
+                if (Munch)
+                    PacmanSounds.push_back(std::make_shared<Sound>("contents/Pacman/munch_1.wav"));
+                else
+                    PacmanSounds.push_back(std::make_shared<Sound>("contents/Pacman/munch_2.wav"));
+                Munch = !Munch;
                 break;
             case BONUS:
                 Points.erase(IntPos);
                 Score += 50;
                 BonusClock = NOW;
                 Scatter = true;
+                PacmanSounds.push_back(std::make_shared<Sound>("contents/Pacman/power_pellet.wav"));
                 break;
             default:
                 break;
@@ -261,8 +276,11 @@ void Arcade::Pacman::HitGhost() {
     if (Lives) {
         Lives--;
         UpdateScores();
+        if (!Lives)
+            PacmanSounds.push_back(std::make_shared<Sound>("contents/Pacman/death_1.wav"));
     }
     if (Lives) {
+        PacmanSounds.push_back(std::make_shared<Sound>("contents/Pacman/death_2.wav"));
         for (auto &item: Ghosts)
             item.reset();
         position = {7, 20};
