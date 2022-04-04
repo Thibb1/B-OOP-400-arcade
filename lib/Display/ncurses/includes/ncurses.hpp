@@ -48,6 +48,8 @@ public:
     explicit Converter(const Path& Source) {
         fp = fopen(Source.c_str(), "r");
         pngPtr = png_create_read_struct(PNG_LIBPNG_VER_STRING, nullptr, nullptr, nullptr);
+        if (!pngPtr)
+            return;
         pngInfo = png_create_info_struct(pngPtr);
         png_init_io(pngPtr, fp);
         png_read_png(pngPtr, pngInfo, PNG_TRANSFORM_IDENTITY, nullptr);
@@ -57,7 +59,6 @@ public:
         fclose(fp);
         xFactor = float(width) / float (COLS);
         yFactor = float(height) / float (LINES);
-//        std::cout << height << " " << width << std::endl;
     }
     virtual ~Converter() = default;
 

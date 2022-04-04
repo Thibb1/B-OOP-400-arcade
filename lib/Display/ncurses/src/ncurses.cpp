@@ -36,12 +36,17 @@ Arcade::ncurses::ncurses()
 
 void Arcade::ncurses::RefreshScreen()
 {
-    wrefresh(stdscr);
+    if (!isendwin())
+        wrefresh(stdscr);
+    else
+        initscr();
 }
 
 Arcade::Input Arcade::ncurses::GetInput()
 {
     Input InputUser = NOTHING;
+    if (isendwin())
+        return EXIT;
     int ch = getch();
 
     while (ch != ERR) {
@@ -105,10 +110,12 @@ void Arcade::ncurses::DrawTile(Arcade::Tile *Tile)
     attron(COLOR_PAIR(color));
     mvprintw(int(Tile->getPosition().second), int(Tile->getPosition().first), Tile->getCharacter().c_str());
     attroff(COLOR_PAIR(color));
-    if (!std::filesystem::exists(Tile->getTexturePath()+"_compressed.png"))
-        return;
-    Converter conv(Tile->getTexturePath()+"_compressed.png");
-    conv.processImage(Tile->getPosition());
+    Path path = Tile->getTexturePath()+"_compressed.png";
+    std::fstream file(path);
+    if (file.good()) {
+        Converter conv(Tile->getTexturePath() + "_compressed.png");
+        conv.processImage(Tile->getPosition());
+    }
 }
 
 
@@ -117,9 +124,12 @@ Arcade::ncurses::~ncurses()
     clear();
     refresh();
     endwin();
+    std::cerr << "Deleted" << std::endl;
 }
 
 void Converter::processImage(Arcade::Position position) {
+    if (!rows)
+        return;
     for (float yIdx = 0; uint (yIdx) < height; yIdx += 1 * yFactor) {
         for (float xIdx = 0; uint (xIdx) < width; xIdx += 1 * xFactor) {
             int x = int (xIdx);
