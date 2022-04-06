@@ -2,7 +2,7 @@
 ** EPITECH PROJECT, 2022
 ** Arcade.cpp
 ** File description:
-** TODO
+** Borne arcade
 */
 
 #include "ArcadeBorne.hpp"

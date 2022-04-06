@@ -16,6 +16,12 @@ Arcade::ncurses::ncurses()
 {
     setlocale(LC_ALL, "");
     initscr();
+    if (isendwin()) {
+        newterm(std::getenv("TERM"), stdin, stdout);
+        endwin();
+        initscr();
+    }
+
     start_color();
     noecho();
     use_default_colors();
@@ -25,13 +31,6 @@ Arcade::ncurses::ncurses()
     curs_set(0);
     for (int i = 0; i < COLORS; i++)
         init_extended_pair(i + 1, i, -1);
-//    init_pair(BLUE, COLOR_BLUE, COLOR_BLACK);
-//    init_pair(RED, COLOR_RED, COLOR_BLACK);
-//    init_pair(GREEN, COLOR_GREEN, COLOR_BLACK);
-//    init_pair(WHITE, COLOR_WHITE, COLOR_BLACK);
-//    init_pair(CYAN, COLOR_CYAN, COLOR_BLACK);
-//    init_pair(MAGENTA, COLOR_MAGENTA, COLOR_BLACK);
-//    init_pair(YELLOW, COLOR_YELLOW, COLOR_BLACK);
 }
 
 void Arcade::ncurses::RefreshScreen()
