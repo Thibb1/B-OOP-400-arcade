@@ -56,7 +56,7 @@ Arcade::Pacman::Pacman() : position(7, 20), Direction(NOTHING), LastDirectionTry
     GameOverText.push_back(std::make_shared<Text>("press M for menu", 15, 0 , Height + 1));
     ScoreText = std::make_shared<Text>("Score : " + std::to_string(Score), WHITE, 20, Height);
     LiveLevelText = std::make_shared<Text>("Lives : " + std::to_string(Lives) + " Level : " + std::to_string(Level), WHITE, 0, Height);
-    SoundPacman = std::make_shared<Sound>("contents/Pacman/game_start.wav", true);
+    SoundPacman = std::make_shared<Sound>("contents/Pacman/game_start.wav");
 }
 
 void Arcade::Pacman::ResetGame()
