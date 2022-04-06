@@ -13,17 +13,22 @@
 #include <map>
 #include <unordered_map>
 #include <SFML/Graphics.hpp>
+#include <SFML/Audio.hpp>
+#include <SFML/System.hpp>
+#include <SFML/Window.hpp>
 
 #include "ArcadeError.hpp"
 
 namespace Arcade
 {
+    typedef std::string SoundPath;
     class sfml: public IDisplay {
     private:
         sf::RenderWindow window;
         sf::Event event;
         sf::Font font;
         std::map<TexturePath, std::shared_ptr<sf::Texture>> TextureMap{};
+        std::unordered_map<SoundPath, std::pair<std::shared_ptr<sf::SoundBuffer>, std::shared_ptr<sf::Sound>>> SoundMap;
     public:
         /**
          * Creating a new instance of the sfml class.

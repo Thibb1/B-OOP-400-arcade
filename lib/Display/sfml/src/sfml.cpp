@@ -21,7 +21,7 @@ Arcade::sfml::sfml()
 }
 
 Arcade::sfml::~sfml() {
-
+    window.close();
 }
 
 Arcade::Input Arcade::sfml::GetInput() {
@@ -93,6 +93,9 @@ void Arcade::sfml::DrawObject(Arcade::Object object) {
     auto Text = dynamic_cast<Arcade::Text *>(object.get());
     if (Text)
         DrawText(Text);
+    auto Sound = dynamic_cast<Arcade::Sound *>(object.get());
+    if (Sound)
+        PlaySound(Sound);
 }
 
 void Arcade::sfml::DrawTile(Arcade::Tile *tile)
@@ -123,5 +126,12 @@ void Arcade::sfml::DrawText(Arcade::Text *text) {
 }
 
 void Arcade::sfml::PlaySound(Arcade::Sound *sound) {
-
+    SoundPath path = sound->getSound();
+    if (!std::filesystem::exists(path))
+        return;
+    if (SoundMap.find(path) == SoundMap.end())
+        SoundMap[path].first = std::make_shared<sf::SoundBuffer>();
+    SoundMap[path].first->loadFromFile(path);
+    SoundMap[path].second = std::make_shared<sf::Sound>(*SoundMap[path].first);
+    SoundMap[path].second->play();
 }
