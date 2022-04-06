@@ -56,7 +56,7 @@ namespace Arcade
         void LoadGameLib();
 
         /**
-         * A function that returns the remainder of the division of the first argument by the second./*
+         * A function that returns the remainder of the division of the first argument by the second.
          * @param a The first argument.
          * @param b The second argument.
          */
