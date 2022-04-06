@@ -3,3 +3,6 @@ build
 *.so
 scores/*
 !scores/.gitignore
+doc/html
+doc/latex
+settings.json

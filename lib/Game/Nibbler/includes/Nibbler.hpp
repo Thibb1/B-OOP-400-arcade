@@ -58,15 +58,51 @@ namespace Arcade
         std::default_random_engine RandomEngine;
         std::vector<SoundObject> NibblerSounds;
     public:
+        /**
+         * Creating a new Nibbler object.
+         */
         Nibbler();
+
+        /**
+         * The destructor for the Nibbler class
+         */
         ~Nibbler() override = default;
+
+        /**
+         * Returning a vector of objects.
+         */
         std::vector<Object> GameLoop(Input input) override;
+
+        /**
+         * Get the score of the game.
+         *
+         * @return The return type is an int, which is the score.
+         */
         int GetScore() override {return Score;}
+
+        /**
+         * Reseting the game.
+         */
         void ResetGame() override;
+
+        /**
+         * Adding a fruit to the map.
+         */
         void AddFruit();
+
+        /**
+         * Moving the snake.
+         */
         void MoveSnake(Input input);
+
+        /**
+         * Checking if the new position is a wall or not.
+         */
         void CheckMovement(Position NewPosition);
 
+        /**
+         * Checking if the snake has collided with itself or the walls.
+         */
         void GameOver();
     };
     extern "C" Nibbler *entry_point();

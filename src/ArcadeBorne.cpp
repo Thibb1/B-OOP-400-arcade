@@ -40,11 +40,13 @@ Arcade::ArcadeBorne::ArcadeBorne(int NbArguments, char **Arguments) : ArcadePars
                 LoadGraphicLib();
                 break;
             case F:
+                InMenu = false;
                 SaveScore();
                 CurrentGame = Modulo(CurrentGame + 1, int (Games.size()));
                 LoadGameLib();
                 break;
             case B:
+                InMenu = false;
                 SaveScore();
                 CurrentGame = Modulo(CurrentGame - 1, int (Games.size()));
                 LoadGameLib();

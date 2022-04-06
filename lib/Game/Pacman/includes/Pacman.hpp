@@ -72,40 +72,100 @@ namespace Arcade
         std::map<Position, int> PointType;
         TileObject PacmanObject;
     public:
+        /**
+         * Creating a new Pacman object.
+         */
         Pacman();
+
+        /**
+         * The destructor is a special function that is called when an object is
+         * destroyed
+         */
         ~Pacman() override = default;
+
+        /**
+         * Returning a vector of objects.
+         */
         std::vector<Object> GameLoop(Input input) override;
+
+        /**
+         * Get the score of the game.
+         *
+         * @return The return type is an int, which is the score.
+         */
         int GetScore() override {return Score;}
 
+        /**
+         * Reseting the game.
+         */
         void ResetGame() override;
 
+        /**
+         * A function that returns the modulo of a and b.
+         */
         static float Modulo(float a, int b);
 
+        /**
+         * Moving the Pacman object to the next position.
+         */
         void MovePacman();
 
+        /**
+         * Setting the direction of the Pacman object.
+         */
         void SetDirection(Input input, bool retry);
 
+        /**
+         * Checking if there is a wall in the position of the Pacman.
+         */
         bool WallInPosition(Position, bool CheckDoor = true);
 
+        /**
+         * Checking if the Pacman is on a point.
+         */
         void PointPacman();
 
+        /**
+         * Converting a Position object to an int.
+         */
         static Position PositionToIntPosition(Position, bool rounded = false);
 
+        /**
+         * Checking if the float is an integer.
+         */
         static bool IsInt(float a) ;
 
+        /**
+         * Checking if the Pacman is on a ghost.
+         */
         void GhostPacman();
 
+        /**
+         * Checking if the Pacman is on a ghost.
+         */
         void HitGhost();
 
+        /**
+* Increasing the level of the game. */
         void LevelUp();
 
+        /**
+* Reseting the points of the game. */
         void resetPoints();
 
         int Width;
         int Height;
 
+        /**
+         * Updating the score of the game.
+         */
         void UpdateScores();
 
+        /**
+         * Return the position of the player
+         *
+         * @return The position of the current node.
+         */
         Position getPosition() {return position;}
     };
     extern "C" Pacman *entry_point();

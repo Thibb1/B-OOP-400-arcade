@@ -13,5 +13,12 @@
 #include "ArcadeParse.hpp"
 #include "Library.hpp"
 
+/**
+ * A macro that defines the value of the return code of the program when it is successful.
+ */
 #define EXIT_SUCCESS 0
+
+/**
+ * Defining the value of the return code of the program when it is successful.
+ */
 #define EXIT_ERROR 84
