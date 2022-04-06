@@ -32,6 +32,7 @@ namespace Arcade
     typedef std::string ToString;
     typedef std::shared_ptr<Text> TextObject;
     typedef std::shared_ptr<Tile> TileObject;
+    typedef std::shared_ptr<Sound> SoundObject;
     class Nibbler : public IGame {
     private:
         Position position;
@@ -55,6 +56,7 @@ namespace Arcade
         bool Eating;
         std::random_device RandomDevice;
         std::default_random_engine RandomEngine;
+        std::vector<SoundObject> NibblerSounds;
     public:
         Nibbler();
         ~Nibbler() override = default;
@@ -64,6 +66,8 @@ namespace Arcade
         void AddFruit();
         void MoveSnake(Input input);
         void CheckMovement(Position NewPosition);
+
+        void GameOver();
     };
     extern "C" Nibbler *entry_point();
 }

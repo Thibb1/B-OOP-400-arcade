@@ -17,24 +17,24 @@ Arcade::Nibbler::Nibbler() : position(5, 5), Direction(ARROW_LEFT), LastDirectio
     Speed(500), Clock(NOW), CanMove(true), Eating(false),
     RandomEngine(std::default_random_engine(RandomDevice()))
 {
-    std::fstream WallsFile("contents/Nibbler.txt");
+    std::fstream WallsFile("contents/Nibbler/Nibbler.txt");
     std::string Line;
     while (std::getline(WallsFile, Line)) {
         if (!Width)
             Width = int (Line.length());
         for (int x = 0; x < int (Line.size()); x++) {
             if (Line[x] == WALL) {
-                Walls.push_back(std::make_shared<Tile>("contents/Pacman/Wall.png", "█", 53, x, Height));
+                Walls.push_back(std::make_shared<Tile>("contents/Nibbler/wall.png", "█", 53, x, Height));
                 MapObjects.emplace(std::make_pair(x, Height), WALL);
             }
         }
         Height++;
     }
-    SnakeHead = std::make_shared<Tile>("contents/SnakeHead.png", "◼", 10, position.first, position.second);
+    SnakeHead = std::make_shared<Tile>("contents/Nibbler/head.png", "◼", 10, position.first, position.second);
     SnakeHead->setRotation(180);
-    Fruit = std::make_shared<Tile>("contents/Pacman/Point.png", "•", 47, 1, 1);
+    Fruit = std::make_shared<Tile>("contents/Nibbler/cherry.png", "•", 47, 1, 1);
     for (int x = 1; x <= Size; x++)
-        SnakeBody.push_back(std::make_shared<Tile>("contents/SnakeBody.png", "◼", 41,position.first + float (x),position.second));
+        SnakeBody.push_back(std::make_shared<Tile>("contents/Nibbler/body.png", "◼", 41,position.first + float (x),position.second));
     GameOverText.push_back(std::make_shared<Text>("press R to restart", 10, 0, Height + 1));
     GameOverText.push_back(std::make_shared<Text>("press M for menu", 15, 0, Height + 2));
     ScoreText = std::make_shared<Text>("Score : " + std::to_string(Score), WHITE, 0, Height);
@@ -56,7 +56,7 @@ void Arcade::Nibbler::ResetGame()
     SnakeHead->setRotation(180);
     SnakeBody.clear();
     for (int x = 1; x <= Size; x++)
-        SnakeBody.push_back(std::make_shared<Tile>("contents/SnakeBody.png", "◼", 41,position.first + float (x),position.second));
+        SnakeBody.push_back(std::make_shared<Tile>("contents/Nibbler/body.png", "◼", 41,position.first + float (x),position.second));
     AddFruit();
     ScoreText->setText("Score : " + std::to_string(Score));
 }
@@ -86,9 +86,12 @@ void Arcade::Nibbler::AddFruit()
  std::vector<Arcade::Object> Arcade::Nibbler::GameLoop(Input input)
 {
     std::vector<Object> objects;
+    NibblerSounds.clear();
     MoveSnake(input);
     objects.push_back(Fruit);
     objects.push_back(SnakeHead);
+    for (auto &Sound: NibblerSounds)
+        objects.push_back(Sound);
     for (auto &BodyPart : SnakeBody)
         objects.push_back(BodyPart);
     for (auto &Wall: Walls)
@@ -156,13 +159,14 @@ void Arcade::Nibbler::MoveSnake(Input input) {
         if (CanMove) {
             LastDirection = Direction;
             SnakeHead->setPosition(position);
-            SnakeBody.push_front(std::make_shared<Tile>("contents/SnakeBody.png", "◼", 41, BackBodyPosition.first, BackBodyPosition.second));
+            SnakeBody.push_front(std::make_shared<Tile>("contents/Nibbler/body.png", "◼", 41, BackBodyPosition.first, BackBodyPosition.second));
             if (!Eating)
                 SnakeBody.pop_back();
             else {
                 Score++;
                 ScoreText->setText("Score : " + std::to_string(Score));
                 AddFruit();
+                NibblerSounds.push_back(std::make_shared<Sound>("contents/Nibbler/munch.mp3"));
             }
             Eating = false;
             if (Speed > 140)
@@ -174,10 +178,21 @@ void Arcade::Nibbler::MoveSnake(Input input) {
 void Arcade::Nibbler::CheckMovement(Position NewPosition) {
     if (MapObjects.find(NewPosition) != MapObjects.end())
         if (MapObjects[NewPosition] == WALL)
-            CanMove = false;
+            GameOver();
+    if (NewPosition.first < 0 || int (NewPosition.first) >= Width)
+        GameOver();
+    if (NewPosition.second < 0 || int (NewPosition.second) >= Height)
+        GameOver();
     if (NewPosition == FruitPos)
         Eating = true;
     for (auto &BodyPart : SnakeBody)
         if (NewPosition == BodyPart->getPosition())
-            CanMove = false;
+            GameOver();
+}
+
+void Arcade::Nibbler::GameOver() {
+    if (CanMove) {
+        CanMove = false;
+        NibblerSounds.push_back(std::make_shared<Sound>("contents/Nibbler/game_over.mp3"));
+    }
 }

@@ -16,7 +16,7 @@ Arcade::sdl2::sdl2() : window(nullptr), renderer(nullptr), font(nullptr)
 {
     if (SDL_Init(SDL_INIT_AUDIO | SDL_INIT_VIDEO | SDL_INIT_EVENTS))
         throw ArcadeRuntimeError();
-    window = SDL_CreateWindow("Arcade - SDL", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 1000, 1000, SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE);
+    window = SDL_CreateWindow("Arcade - SDL", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 1000, 1000, SDL_WINDOW_SHOWN | SDL_WINDOW_FULLSCREEN_DESKTOP);
     if (!window)
         throw ArcadeRuntimeError();
     renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
